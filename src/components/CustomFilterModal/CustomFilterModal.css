@@ -1,0 +1,47 @@
+.modal-overlays {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.5);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 101;
+    overflow: auto;
+  }
+  
+  .modal-contents {
+    background-color: #fff !important;
+    padding: 30px;
+    width: 22rem !important;
+    border-radius: 5px !important;
+  }
+  
+  .modal-contents .date-picker {
+    margin-bottom: 10px;
+  }
+  
+  .filter-modal-title {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-size: 25px;
+    font-weight: 500;
+  }
+  .filter-modal-cross {
+    cursor: pointer;
+  }
+  .input-icons-style {
+    border-radius: inherit !important;
+    border: none !important;
+    border-bottom: 2px solid gray !important;
+    background-color: white !important;
+  }
+  
+  .input-text-style {
+    border: none !important;
+    border-bottom: 2px solid gray !important;
+  }
+  

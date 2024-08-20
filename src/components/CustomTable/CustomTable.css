@@ -1,0 +1,133 @@
+.c-table {
+    width: 100%;
+    border-collapse: collapse;
+    border-spacing: 0;
+    margin: 0;
+    padding: 0;
+    font-size: 1rem;
+    font-weight: 400;
+    color: #212529;
+    border: 1px solid #dee2e6;
+    background-color: #fff;
+    border-radius: 0.25rem;
+  }
+  
+  .c-table td.center {
+    text-align: center;
+  }
+  .c-table td.right {
+    text-align: right;
+  }
+  .c-table td.left {
+    text-align: left;
+  }
+  
+  .c-table th,
+  .c-table td {
+    padding: 0.75rem;
+    vertical-align: top;
+    border-top: 1px solid #dee2e6;
+  }
+  
+  .c-table td.active {
+    color: rgb(9, 220, 9);
+  }
+  
+  .c-table td.suspended {
+    color: rgb(188, 37, 37);
+  }
+  
+  .c-table td.blue {
+    color: #1e81d2;
+  }
+  
+  .c-table td.yellow {
+    color: rgb(10, 198, 236);
+  }
+  
+  .c-table thead th {
+    vertical-align: bottom;
+    background-color: #1e81d2;
+    color: #fff;
+    border-bottom: 2px solid #dee2e6;
+  }
+  
+  .c-table tbody + tbody {
+    border-top: 2px solid #dee2e6;
+  }
+  
+  .c-table .header {
+    display: flex;
+    justify-content: space-between;
+  }
+  
+  .c-table .header span {
+    opacity: 1;
+    transition: all 0.3s;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+  
+  /* .c-table .header span.visible {
+    opacity: 1;
+  } */
+  
+  .c-table .header:hover span {
+    opacity: 1;
+  }
+  
+  .c-table .header .icons {
+    display: flex;
+    gap: 10px;
+  }
+  
+  /* apply border radius */
+  .c-table th:first-child {
+    border-top-left-radius: 5px;
+  }
+  .c-table th:last-child {
+    border-top-right-radius: 5px;
+  }
+  .c-table tr:last-child td:first-child {
+    border-bottom-left-radius: 5px;
+  }
+  .c-table tr:last-child td:last-child {
+    border-bottom-right-radius: 5px;
+  }
+  
+  /* apply hover effect */
+  .c-table tbody tr:hover {
+    background-color: rgb(245, 245, 245);
+  }
+  
+  .relative {
+    position: relative;
+  }
+  
+  .c-table__header__cell.sticky,
+  .c-table__body__cell.sticky {
+    position: sticky;
+    left: 0;
+    z-index: 1;
+  }
+  
+  .c-table__header__cell.sticky + .sticky,
+  .c-table__body__cell.sticky + .sticky {
+    left: auto;
+  }
+  
+  .c-table__header__cell.sticky {
+    z-index: 2;
+  }
+  
+  .c-table__header__cell.sticky {
+    background-color: #1e81d2;
+    color: #fff;
+  }
+  
+  .c-table__body__cell.sticky {
+    background-color: #f8f9fa;
+  }
+  
