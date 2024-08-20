@@ -1,0 +1,286 @@
+export const parseCurrency = (amount) => {
+  if (amount && isNaN(amount) && amount.indexOf(",") !== -1) {
+    let newAmount = "";
+    let amountArr = amount.split(",");
+    for (var k = 0; k < amountArr.length; k++) {
+      // Trim the excess whitespace.
+      amountArr[k] = amountArr[k].replace(/^\s*/, "").replace(/\s*$/, "");
+      // Add additional code here, such as:
+      newAmount = newAmount.concat(amountArr[k]);
+    }
+    amount = newAmount;
+  }
+  return amount;
+};
+
+export const formatMoney = (
+  amount,
+  decimalCount = 2,
+  decimal = ".",
+  thousands = ","
+) => {
+  try {
+    decimalCount = Math.abs(decimalCount);
+    decimalCount = isNaN(decimalCount) ? 2 : decimalCount;
+
+    const negativeSign = amount < 0 ? "-" : "";
+
+    let i = parseInt(
+      (amount = Math.abs(Number(amount) || 0).toFixed(decimalCount))
+    ).toString();
+    let j = i.length > 3 ? i.length % 3 : 0;
+
+    return (
+      negativeSign +
+      (j ? i.substr(0, j) + thousands : "") +
+      i.substr(j).replace(/(\d{3})(?=\d)/g, "$1" + thousands) +
+      (decimalCount
+        ? decimal +
+          Math.abs(amount - i)
+            .toFixed(decimalCount)
+            .slice(2)
+        : "")
+    );
+  } catch (e) {
+    // console.log(e);
+  }
+};
+
+export const formatDate = (dateObj) => {
+  if (dateObj === null || dateObj === "") return null;
+
+  var monthNames = [
+    "JAN",
+    "FEB",
+    "MAR",
+    "APR",
+    "MAY",
+    "JUN",
+    "JUL",
+    "AUG",
+    "SEP",
+    "OCT",
+    "NOV",
+    "DEC",
+  ];
+
+  var date = new Date(dateObj);
+  date =
+    date.getDate() +
+    " " +
+    monthNames[date.getMonth()] +
+    " " +
+    date.getFullYear();
+  return date;
+};
+export const formateReportDate = (weekDate) => {
+  if (weekDate === null || weekDate === "") return null;
+
+  let dateObj = new Date(weekDate);
+
+  var month =
+    (dateObj.getMonth() + 1 < 10 ? "0" : "") + (dateObj.getMonth() + 1);
+  var date = (dateObj.getDate() < 10 ? "0" : "") + dateObj.getDate();
+  return date + "-" + month + "-" + dateObj.getFullYear();
+};
+export const getDateTime = (weekDate) => {
+  if (weekDate === null || weekDate === "") return null;
+
+  let dateObj = new Date(weekDate);
+
+  var month =
+    (dateObj.getMonth() + 1 < 10 ? "0" : "") + (dateObj.getMonth() + 1);
+  var date = (dateObj.getDate() < 10 ? "0" : "") + dateObj.getDate();
+  var min = dateObj.getMinutes();
+  if (min < 10) {
+    min = "0" + min;
+  }
+  var time = dateObj.getHours() + ":" + min;
+
+  return date + "-" + month + "-" + dateObj.getFullYear() + " " + time;
+};
+
+export const parseDate = (weekDate) => {
+  if (weekDate === null || weekDate === "") return null;
+
+  let dateObj = new Date(weekDate);
+
+  var month =
+    (dateObj.getMonth() + 1 < 10 ? "0" : "") + (dateObj.getMonth() + 1);
+  var date = (dateObj.getDate() < 10 ? "0" : "") + dateObj.getDate();
+  return dateObj.getFullYear() + "-" + month + "-" + date;
+};
+export const parseDateTime = (weekDate) => {
+  if (weekDate === null || weekDate === "") return null;
+
+  let dateObj = new Date(weekDate);
+
+  var month =
+    (dateObj.getMonth() + 1 < 10 ? "0" : "") + (dateObj.getMonth() + 1);
+  var date = (dateObj.getDate() < 10 ? "0" : "") + dateObj.getDate();
+  var today = new Date();
+  var min = today.getMinutes();
+  if (min < 10) {
+    min = "0" + min;
+  }
+  var time = today.getHours() + ":" + min;
+
+  return dateObj.getFullYear() + "-" + month + "-" + date + " " + time;
+};
+export const formatTime = (weekDate) => {
+  if (weekDate === null || weekDate === "") return null;
+
+  let dateObj = new Date(weekDate);
+  var min = dateObj.getMinutes();
+  if (min < 10) {
+    min = "0" + min;
+  }
+  var sec = dateObj.getMinutes();
+  if (sec < 10) {
+    sec = "0" + sec;
+  }
+  const time = dateObj.getHours() + ":" + min + ":" + sec;
+  return time;
+};
+export const shortenDealId = (dealId) => {
+  let newDealId = dealId;
+  let index = dealId.lastIndexOf("-");
+  if (index !== -1) {
+    newDealId = dealId.substring(index + 1, dealId.length);
+  }
+  return newDealId;
+};
+export const sortArray = (arr, key, sortByAscending, dataType) => {
+  let data =
+    dataType === "string"
+      ? sortByString(arr, key, sortByAscending)
+      : dataType === "date"
+      ? sortByDate(arr, key, sortByAscending)
+      : dataType === "number"
+      ? sortByNumber(arr, key, sortByAscending)
+      : arr;
+  return data;
+};
+export const sortByNumber = (arr, key, ascending) => {
+  arr.sort((a, b) => {
+    if (parseFloat(a[key]) < parseFloat(b[key])) {
+      return ascending ? -1 : 1;
+    } else {
+      return ascending ? 1 : -1;
+    }
+  });
+  return arr;
+};
+export const sortByString = (arr, key, ascending) => {
+  arr.sort((a, b) => {
+    if (a[key] < b[key]) {
+      return ascending ? -1 : 1;
+    } else {
+      return ascending ? 1 : -1;
+    }
+  });
+  return arr;
+};
+export const sortByDate = (arr, key, ascending) => {
+  arr.sort((a, b) => {
+    if (ascending) {
+      return new Date(a[key]).getTime() - new Date(b[key]).getTime();
+    } else {
+      return new Date(b[key]).getTime() - new Date(a[key]).getTime();
+    }
+  });
+  return arr;
+};
+export const formatErrString = (myJSON) => {
+  // console.log(myJSON);
+  var myJSONString = JSON.stringify(myJSON);
+  // console.log(myJSONString);
+  var myEscapedJSONString = myJSONString
+    .replace(/\\n/g, "\\n")
+    .replace(/\\'/g, "\\'")
+    .replace(/\\"/g, '\\"')
+    .replace(/\\&/g, "\\&")
+    .replace(/\\r/g, "\\r")
+    .replace(/\\t/g, "\\t")
+    .replace(/\\b/g, "\\b")
+    .replace(/\\f/g, "\\f");
+  // console.log(myEscapedJSONString);
+  return JSON.parse(myEscapedJSONString);
+};
+export const SearchTable = (tableData, keys, searchParam) => {
+  let filteredData = [];
+  if (tableData && tableData.length > 0) {
+    filteredData = tableData.filter((row) => {
+      let isExists = false;
+      keys &&
+        keys.forEach((key) => {
+          if (typeof row[key] === "string") {
+            isExists =
+              isExists ||
+              row[key].toLowerCase().includes(searchParam.toLowerCase());
+          }
+        });
+      return isExists;
+    });
+  }
+  return filteredData;
+};
+export const formatReportDate = (item) => {
+  const dd = new Date(item);
+  function removeTime(date = new Date()) {
+    return new Date(date.getFullYear(), date.getMonth(), date.getDate());
+  }
+  if (item) {
+    // if (typeof item === "object") {
+    //   return formatDate(item);
+    // } else {
+    return removeTime(new Date(item));
+
+    // const [year, month, day] = item.split("-");
+    // const date = day + "-" + month + "-" + year;
+    // return date;
+    // }
+  } else return "";
+};
+export const formatReportMoney = (item) => {
+  // console.log(typeof item, item);
+  let value = Number(item);
+  // if (Number(value) < 0) {
+  //   value = "-" + Math.abs(Number(value));
+  // }
+  // console.log("TYPE -  ", typeof value, item, value);
+  return value ? value : "0.00";
+};
+export const formatReportMoneyChange = (item) => {
+  let value = item;
+  if (value < 0) {
+    value = Math.abs(Number(item));
+  } else {
+    value = Math.abs(Number(item)) * -1;
+  }
+  return value ? value : "0.00";
+};
+export const fullDateAndTime = (date) => {
+  if (date === null || date === "") return null;
+  let newDate = new Date(date);
+  let day = newDate.getDate();
+  let month = newDate.getMonth() + 1;
+  let year = newDate.getFullYear();
+  let hours = newDate.getHours();
+  let minutes = newDate.getMinutes();
+  let seconds = newDate.getSeconds();
+  return (
+    (day < 10 ? "0" + day : day) +
+    "-" +
+    (month < 10 ? "0" + month : month) +
+    "-" +
+    year +
+    " " +
+    (hours < 10 ? "0" + hours : hours) +
+    ":" +
+    (minutes < 10 ? "0" + minutes : minutes) +
+    ":" +
+    (seconds < 10 ? "0" + seconds : seconds)
+  );
+};
+// export { Context };

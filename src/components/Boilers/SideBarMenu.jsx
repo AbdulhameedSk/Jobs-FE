@@ -3,27 +3,13 @@ import "../../components/Boilers/SideBarMenu.css";
 import CustomIcon from "../../components/CustomIcon.jsx";
 import { useNavigate } from "react-router-dom";
 import Logo from "../../assets/ChauwkLogo/ROUND_LOGO.png";
+
 const SideBarMenu = () => {
-  //Remove welcome message and category from the sidebar
   const navigate = useNavigate();
-  const [isListOpen, setIsListOpen] = useState(false);
-  const [isListOpenMedia, setIsListOpenMedia] = useState(false);
   const [isListOpenSkill, setIsListOpenSkill] = useState(false);
   const [isListSecOpen, setIsListSecOpen] = useState(false);
   const [selectedItem, setSelectedItem] = useState(null);
-  const [isListSubadminOpen, setIsListSubadminOpen] = useState(false);
 
-
-  const [isListVideoOpen, setIsListVideoOpen] = useState(false);
-  const [isListUsersOpen, setIsListUsersOpen] = useState(false);
-
-  const toggleList = () => {
-    setIsListOpen(!isListOpen);
-  };
-
-  const toggleListMedia = () => {
-    setIsListOpenMedia(!isListOpenMedia);
-  };
 
   const toggleListSkill = () => {
     setIsListOpenSkill(!isListOpenSkill);
@@ -32,20 +18,10 @@ const SideBarMenu = () => {
   const toggleListSecond = () => {
     setIsListSecOpen(!isListSecOpen);
   };
-  const togglesubadmin = () => {
-    setIsListSubadminOpen(!isListSubadminOpen);
-  };
-  const toggleVideoList = () => {
-    setIsListVideoOpen(!isListVideoOpen);
-  };
-
-  const toggleUserList = () => {
-    setIsListUsersOpen(!isListUsersOpen);
-  };
 
   const handleItemClick = (route) => {
     setSelectedItem(route);
-    navigate(route);
+    navigate(`/${route}`);
   };
 
   return (
@@ -56,33 +32,7 @@ const SideBarMenu = () => {
 
       <div className="sideBar-border-line"></div>
       <div style={{ marginTop: "15px", padding: "0px 20px 0px 20px" }}>
-
-      {/* { (
-          <div
-            onClick={() => handleItemClick("agreement")}
-            style={{
-              backgroundColor:
-                selectedItem === "agreement" ? "lightblue" : "transparent",
-              borderRadius: "5px",
-            }}
-            className="side-fixing-text-sd"
-          >
-            <div className="side-icon-dash">
-              <CustomIcon name={"MdDashboard"} />
-            </div>
-            <div
-              className="sideBar-text-dash"
-              style={{
-                color:
-                  selectedItem === "agreement" ? "#1e81d2" : "rgb(144 132 132)",
-              }}
-            >
-              Agreement
-            </div>
-          </div>
-        )} */}
-
-        { (
+        {(
           <div
             onClick={() => handleItemClick("dashboard")}
             style={{
@@ -119,7 +69,6 @@ const SideBarMenu = () => {
         }
         {isListOpenSkill && (
           <div>
-           
             <div
               onClick={() => handleItemClick("category")}
               style={{

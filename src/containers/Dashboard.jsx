@@ -6,9 +6,7 @@ export default function ChartsOverviewDemo() {
   return (
     <div className="flex">
       {/* Sidebar Menu */}
-      <div className="w-60 bg-gray-800 h-screen">
-        <SideBarMenu />
-      </div>
+
 
       {/* Main Content */}
       <div className="flex-1 ">

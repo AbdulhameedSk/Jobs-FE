@@ -18,7 +18,6 @@ export default function CategoryList({
   searchInput,
   setFiltersApplied,
   tableRef,
-  hasSkillYatraWritePermission,
   totalPages,
   currentPage,
   rowsPerPage,
@@ -29,28 +28,26 @@ export default function CategoryList({
 }) {
   const [showAlert, setShowAlert] = useState(false);
   const [deleteId, setDeleteId] = useState("");
-  const headers = ["Name", "Description", "Thanks Description", "Actions"];
-  const filterTypes = ["text", "text", "text", ""];
-  const textAlign = ["left", "left", "left", ""];
-
   const [rows, setRows] = useState([]);
 
   const authToken = useSelector((state) => state.auth.authToken);
 
+  const headers = ["Name", "Description", "Thanks Description", "Actions"];
+  const filterTypes = ["text", "text", "text", ""];
+  const textAlign = ["left", "left", "left", ""];
+
   const handleDelete = async (id) => {
     setIsLoading(true);
     try {
-         const response = await fetch(endpoint.CATEGORY_DELETE, {
+      const response = await fetch(endpoint.CATEGORY_DELETE, {
         method: "DELETE",
         headers: {
           "Content-Type": "application/json",
-          "Authorization": `Bearer ${authToken}`,
+          Authorization: `Bearer ${authToken}`,
         },
-        body: JSON.stringify({
-          _id: id,
-        }),
+        body: JSON.stringify({ _id: id }),
       });
-      
+
       const data = await response.json();
       if (response.status === 200) {
         toast.success("Category deleted successfully");
@@ -81,29 +78,27 @@ export default function CategoryList({
         category.name,
         category.description,
         category.thanksdescription,
-        hasSkillYatraWritePermission && (
-          <div className="icons-options">
-            <div
-              className="icon1"
-              onClick={() => handleEditCategoryButton(category._id)}
-            >
-              <CustomIcon name="MdEdit" tag="Edit Category" />
-            </div>
-            <div className="icon3" onClick={() => {}}>
-              <CustomIcon name="IoIosPlay" tag="Unpublish Category" />
-            </div>
-            <div
-              className="icon2"
-              onClick={() => openCustomAlert(category._id)}
-            >
-              <CustomIcon name="MdDelete" tag="Delete Category" />
-            </div>
+        <div className="icons-options" key={category._id}>
+          <div
+            className="icon1"
+            onClick={() => handleEditCategoryButton(category._id)}
+          >
+            <CustomIcon name="MdEdit" tag="Edit Category" />
           </div>
-        ),
+          <div className="icon3" onClick={() => {}}>
+            <CustomIcon name="IoIosPlay" tag="Unpublish Category" />
+          </div>
+          <div
+            className="icon2"
+            onClick={() => openCustomAlert(category._id)}
+          >
+            <CustomIcon name="MdDelete" tag="Delete Category" />
+          </div>
+        </div>,
       ]);
       setRows(rows);
     }
-  }, [categories, hasSkillYatraWritePermission]);
+  }, [categories]);
 
   return (
     <div className="ListCategory">
@@ -128,9 +123,7 @@ export default function CategoryList({
       {showAlert && (
         <CustomAlert
           show={showAlert}
-          onClickFunction={() => {
-            handleDelete(deleteId);
-          }}
+          onClickFunction={() => handleDelete(deleteId)}
           onCancelFunction={() => setShowAlert(false)}
           message="Are you sure you want to delete this category?"
           type="delete"

@@ -3,18 +3,19 @@ import Header from "../../components/Boilers/Header.jsx";
 import "../../containers/Category/Category.css";
 import CustomIcon from "../../components/CustomIcon";
 import { endpoint } from "../../apis/endpoint";
-// import { useSelector } from "react-redux";
+import { useSelector } from "react-redux";
 import { toast } from "react-hot-toast";
 import CategoryList from "../../components/CategoryList/CategoryList.jsx";
 import Spinner from "../../components/Spinner/Spinner";
 import CustomFilterModal from "../../components/CustomFilterModal/CustomFilterModal.jsx";
+import { apiHandler } from "../../apis/index.js";
 
 const Category = () => {
   const [isLoading, setIsLoading] = useState(false);
   const [categories, setCategories] = useState([]);
   const [isLoaded, setIsLoaded] = useState(false);
   const [isEditCategory, setIsEditCategory] = useState(false);
-  // const authToken = useSelector((state) => state.auth.authToken);
+  const authToken = useSelector((state) => state.auth.authToken);
   const [searchInput, setSearchInput] = useState("");
   const [categoryName, setCategoryName] = useState("");
   const [categoryDescription, setCategoryDescription] = useState("");
@@ -26,9 +27,8 @@ const Category = () => {
   const [category, setCategory] = useState(null);
   const tableRef = useRef();
   const [filterApplied, setFiltersApplied] = useState(false);
-  const [hasSkillYatraWritePermission, setHasSkillYatraWritePermission] =
-    useState(false);
-  // const userId = useSelector((state) => state.user.userId);
+
+  const userId = useSelector((state) => state.user.userId);
 
   const [totalPages, setTotalPages] = useState(1);
   const [currentPage, setCurrentPage] = useState(1);
@@ -110,36 +110,7 @@ const Category = () => {
     null,
   ];
 
-  const fetchPermissions = async () => {
-    try {
-        const token = localStorage.getItem("token");
-        const response = await fetch(`${endpoint.FETCH_PERMISSIONS}${userId}`, {
-          method: "GET",
-          headers: {
-            "Content-Type": "application/json",
-            Authorization: `Bearer ${token}`,
-          },
-        });
-        
-        const data = await response.json();
-        
-      if (response.status === 200) {
-        const permissions = response.data; // Assuming response.data contains permissions object
-        const writePermissions = permissions.write || [];
-        if (writePermissions.includes("Skill Yatra")) {
-          setHasSkillYatraWritePermission(true);
-        }
-      } else {
-        console.log("Error in fetching permissions details");
-      }
-    } catch (error) {
-      console.error("Error fetching permissions:", error);
-    }
-  };
-
-  useEffect(() => {
-    fetchPermissions();
-  }, []);
+  
 
   const handleCategoryFileChange1 = (e) => {
     const file = e.target.files[0];
@@ -198,7 +169,6 @@ const Category = () => {
     formData.append("thanksdescription", categoryCompletedTask);
     setIsLoaded(true);
     try {
-      const token = localStorage.getItem("token");
       const response = await apiHandler({
         url: endpoint.CATEGORY_SAVE,
         method: "POST",
@@ -206,7 +176,7 @@ const Category = () => {
         authToken: authToken,
         headers: {
           "Content-Type": "multipart/form-data",
-          Authorization: `Bearer ${token}`,
+          Authorization: `Bearer ${authToken}`,
         },
       });
       if (response.status === 200) {
@@ -415,7 +385,7 @@ const Category = () => {
     <div>
       <Header
         title={"Category"}
-        icon={hasSkillYatraWritePermission ? "FaPlus" : ""}
+        icon={"FaPlus" }
         className={isEditCategory ? "rotate-icon" : " "}
         onClickFunc={handleIsEditCategory}
         searchInput={searchInput}
@@ -580,7 +550,6 @@ const Category = () => {
             getCategories={getCategories}
             searchInput={searchInput}
             setFiltersApplied={setFiltersApplied}
-            hasSkillYatraWritePermission={hasSkillYatraWritePermission}
             totalPages={totalPages}
             currentPage={currentPage}
             rowsPerPage={rowsPerPage}

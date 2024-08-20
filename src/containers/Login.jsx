@@ -41,6 +41,7 @@ export default function Login() {
           pauseOnHover: true,
           draggable: true,
           progress: undefined,
+          style: { color: "red" },
           theme: "light",
           });
         toast.success("Login Success");

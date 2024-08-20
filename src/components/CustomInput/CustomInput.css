@@ -1,0 +1,11 @@
+.form-control.input-text-btn {
+    border: 2px solid #0000005c !important;
+    color: #000000 !important;
+    box-shadow: none !important;
+    border-radius: 5px !important;
+  }
+  
+  .form-control.input-text-btn:focus {
+    border: 2px solid #1e81d2 !important;
+  }
+  
