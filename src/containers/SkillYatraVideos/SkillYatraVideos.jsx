@@ -361,6 +361,7 @@ export default function SkillYatraVideos() {
             </FormControl>
           </div>
           <CustomTable
+      
             headers={headers}
             rows={paginatedRows}
             searchInput={searchInput}

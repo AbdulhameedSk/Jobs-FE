@@ -19,6 +19,7 @@ function App() {
           <Route exact path="/" element={<Login />} />
           <Route exact path="/login" element={<Login />} />
           <Route exact path="/register" element={<Register />} />
+          <Route exact path="/secreg" element={<Secreg />} />
 
           <Route
             path="*"
@@ -32,7 +33,6 @@ function App() {
                 {/* Main Content */}
                 <div className="flex-1">
                   <Routes>
-                    <Route exact path="/secreg" element={<Secreg />} />
                     <Route exact path="/dashboard" element={<Dashboard />} />
                     <Route exact path="/agreement" element={<Agreement />} />
                     <Route exact path="/category" element={<Category />} />
