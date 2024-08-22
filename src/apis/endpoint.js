@@ -1,9 +1,9 @@
 export const endpoint = {
     BASE_URL_STAGING: "http://localhost:3001/",
   
-    LOGIN: "api/enterprise/login",
-    REGISTER:"api/enterprise/register",
-    USER: "api/admin/getUserDetailedList",
+  LOGIN: "api/enterprise/login",
+  REGISTER:"api/enterprise/register",
+  USER: "api/admin/getUserDetailedList",
   VIDEO: "/api/video/all",
   CHARTBAR: "/api/admin/getMetrics",
   CATEGORY: "api/category/all",
@@ -75,5 +75,12 @@ export const endpoint = {
   SOCIAL_MEDIA_REQUEST: "api/admin/getPendingSocialMedia",
   TEST_API: "/api/Video/getVideosByCategoryName",
   PENDING_CATEGORY: "api/category/getPendingCategory",
+  COMPLETE_REGISTRATION:"api/enterprise/complete-profile",
+  COMPLETE:"api/enterprise/completed",
+  ENTERPRISE_DETAILS:"api/enterprise/getUserDetails", 
+  CATEGORY_ENTERPRISE:"api/category/getCategoryEnterprise",
+  ADD_CATEGORY_ENTERPRISE:"api/category/addCategoryEnterprise",
+  ADD_VIDEO_ENTERPRISE:"api/categoryvideos/saveVideoEnterprise",
+  ENTERPRISE_JOBS:"api/job-portal/getAllJobsEnterprise",
   };
   

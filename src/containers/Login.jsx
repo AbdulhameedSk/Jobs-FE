@@ -1,3 +1,13 @@
+//Change the color
+//Terms and conditions, privacy policy 
+//Name , Password (CHanged)
+//Backbutton
+//EMail or id while logging in 
+//Forgot password
+//restricted , paid or free
+//Internal and external posting in Jobs (own employees and public jobs)
+//Jobs should be approved by super admin
+//Change job status array(Active, Inactive, Pending, Rejected)
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { endpoint } from "../apis/endpoint";
@@ -28,11 +38,13 @@ export default function Login() {
       const data = await response.json();
       setLoading(false);
       if (data.success) {
-        setMessage("Login Successful! Redirecting...");
-        // console.log(data.user._id);
+        setMessage("");
         
         dispatch(saveAuthToken(data.accessToken));
         dispatch(saveUserId(data.user._id));
+        console.log(data.user._id);
+        
+        
         toast('🥷 Complete Registration in profile!', {
           position: "top-right",
           autoClose: 9000,
@@ -41,7 +53,7 @@ export default function Login() {
           pauseOnHover: true,
           draggable: true,
           progress: undefined,
-          style: { color: "red" },
+          style: { color: "blue" },
           theme: "light",
           });
         toast.success("Login Success");

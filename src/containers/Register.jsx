@@ -30,11 +30,8 @@ export default function Register() {
 
       if (data.success) {
         setMessage("Registration Successful! Redirecting...");
-        if (data.FullRegestered == "true") {
-          setTimeout(() => navigate("/dashboard"));
-        }else{
-            navigate("/secreg")
-        }
+          setTimeout(() => navigate("/login"));
+  
       } else {
         setMessage(data.msg || "Invalid credentials");
       }

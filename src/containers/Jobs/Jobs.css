@@ -1,0 +1,113 @@
+.container-job {
+  width: 800px;
+  background-color: white;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  margin-top: 20px;
+  border-radius: 5px;
+  border: 2px solid rgb(23, 137, 207);
+  padding: 20px;
+}
+
+.container-job .text {
+  font-weight: 600;
+}
+
+.text-fields {
+  display: flex;
+  align-items: center;
+  margin-top: 10px;
+  width: 800px; /* Set width to 800px */
+}
+
+.text-label {
+  cursor: pointer;
+  margin-right: 10px;
+}
+
+.text-content {
+  border: 1px solid #ccc;
+  padding: 10px;
+  width: 700px; /* Set width to 800px */
+  border-radius: 4px;
+  min-width: 100px;
+  transition: border-color 0.3s ease-in-out;
+}
+
+.text-content:focus {
+  border-color: #007bff;
+}
+
+.job-description {
+  margin-top: 20px;
+  width: 800px;
+  height: 130px;
+  background-color: beige;
+}
+
+.job-description .job-text {
+  margin-top: 10px;
+  margin-left: 10px;
+}
+
+.jobs {
+  padding: 20px 40px;
+  overflow: scroll;
+  height: 80vh;
+  width: 100%;
+}
+.jobs .jobs-table {
+  width: max-content;
+}
+
+.jobs-table .h2-style {
+  display: flex;
+  gap: 10px;
+  align-items: center;
+}
+
+.jobs-table .h2-style svg {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  margin-top: 5px;
+}
+.input-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+}
+
+.input-container .form-input {
+  width: 700px;
+}
+
+.container-job {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.container-job .dropdown {
+  margin-bottom: 15px;
+}
+.container-job .slider {
+  width: 750px;
+  margin-bottom: 15px;
+}
+
+.post-job {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+
+.post-job .add-button {
+  width: 800px;
+  margin: 15px 0;
+}

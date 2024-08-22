@@ -158,30 +158,7 @@ const SideBarMenu = () => {
                 Jobs
               </div>
             </div>
-            <div
-              onClick={() => handleItemClick("referrals")}
-              style={{
-                backgroundColor:
-                  selectedItem === "referrals" ? "lightblue" : "transparent",
-                borderRadius: "5px",
-              }}
-              className="side-fixing-text-col"
-            >
-              <div className="side-icon-dash-col">
-                <CustomIcon name={"FaPeopleArrows"} />
-              </div>
-              <div
-                className="sideBar-text-dash-col"
-                style={{
-                  color:
-                    selectedItem === "referrals"
-                      ? "#1e81d2"
-                      : "rgb(144 132 132)",
-                }}
-              >
-                Referrals
-              </div>
-            </div>
+           
           </div>
         )}
       </div>

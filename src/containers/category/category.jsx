@@ -109,8 +109,23 @@ const Category = () => {
     ],
     null,
   ];
-
+  const completedGST = async () => {
+    const response = await fetch(`${endpoint.BASE_URL_STAGING}${endpoint.COMPLETE}`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${authToken}`,
+      },
+      body: JSON.stringify({
+        CurrentUser: userId,
+      }),
+    });
   
+    const data = await response.json();
+    console.log(data);
+    
+    return data;
+  };
 
   const handleCategoryFileChange1 = (e) => {
     const file = e.target.files[0];
@@ -170,7 +185,7 @@ const Category = () => {
     setIsLoaded(true);
     try {
       const response = await apiHandler({
-        url: endpoint.CATEGORY_SAVE,
+        url: endpoint.ADD_CATEGORY_ENTERPRISE,
         method: "POST",
         data: formData,
         authToken: authToken,
@@ -225,7 +240,7 @@ const Category = () => {
     }
     try {
       const response = await apiHandler({
-        url: endpoint.CATEGORY,
+        url: endpoint.CATEGORY_ENTERPRISE,
         method: "POST",
         authToken: authToken,
         data: {
@@ -255,35 +270,32 @@ const Category = () => {
       setIsLoading(false);
     }
   };
-
-  const getCategoryByID = async (id) => {
+const getCategoryByID = async (id) => {
     setIsLoading(true);
     try {
-      const token = localStorage.getItem("token");
-      const response = await apiHandler({
-        url: endpoint.CATEGORY_BY_ID,
-        method: "POST",
-        data: {
-          id: id,
-        },
-        authToken: authToken,
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${token}`,
-        },
-      });
-      if (response.status === 200) {
-        toast.success("Category Fetched Successfully");
-        setCategory(response.data.data.category);
-      } else {
+        const response = await apiHandler({
+            url: endpoint.CATEGORY_BY_ID,
+            method: "POST",
+            data: {
+                id: id,
+            },
+            headers: {
+                "Content-Type": "application/json",
+                Authorization: `Bearer ${authToken}`
+            }
+        });
+        if (response.status === 200) {
+            toast.success("Category Fetched Successfully");
+            setCategory(response.data.data.category);
+        } else {
+            toast.error("Failed to fetch Category");
+        }
+    } catch (error) {
         toast.error("Failed to fetch Category");
-      }
-    } catch {
-      toast.error("Failed to fetch Category");
     } finally {
-      setIsLoading(false);
+        setIsLoading(false);
     }
-  };
+};
 
   const setAllElements = async () => {
     if (category) {
@@ -381,6 +393,31 @@ const Category = () => {
     }
   }, [isNameFilter, isDescFilter, isThanksDescFilter]);
 
+  const [isGSTCompleted, setIsGSTCompleted] = useState(null);
+
+  useEffect(() => {
+    const fetchGSTStatus = async () => {
+      const result = await completedGST();
+      setIsGSTCompleted(result);
+
+      if (!result) {
+        toast.promise(
+          {
+            loading: "Looks like you haven't completed your GST details. Please complete it to proceed.",
+            success: <b>Settings saved!</b>,
+            error: <b>Could not save.</b>,
+          }
+        );
+      }
+    };
+
+    fetchGSTStatus();
+  }, []);
+
+
+if(!isGSTCompleted){
+  return <div>Registration complete karna padega</div>
+}
   return (
     <div>
       <Header

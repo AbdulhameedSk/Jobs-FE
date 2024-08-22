@@ -84,7 +84,7 @@ export default function SkillYatraVideos() {
     setIsLoading(true);
     try {
       const result = await apiHandler({
-        url: endpoint.CATEGORY,
+        url: endpoint.CATEGORY_ENTERPRISE,
         method: "POST",
         authToken: authToken,
         headers: {
@@ -197,7 +197,23 @@ export default function SkillYatraVideos() {
     setDeleteId(id);
     setUserId(userId);
   };
-
+  const completedGST = async () => {
+    const response = await fetch(`${endpoint.BASE_URL_STAGING}${endpoint.COMPLETE}`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${authToken}`,
+      },
+      body: JSON.stringify({
+        CurrentUser: userIdh,
+      }),
+    });
+  
+    const data = await response.json();
+    console.log(data);
+    
+    return data;
+  };
   const deleteVideo = async () => {
     setIsLoading(true);
     try {
@@ -253,7 +269,7 @@ export default function SkillYatraVideos() {
     setIsLoading(true);
     try {
       const result = await apiHandler({
-        url: endpoint.CATEGORY_VIDEOS_SAVE,
+        url: endpoint.ADD_VIDEO_ENTERPRISE,
         method: "POST",
         data: formData,
         headers: {
@@ -305,6 +321,42 @@ export default function SkillYatraVideos() {
     (currentPage - 1) * rowsPerPage,
     currentPage * rowsPerPage
   );
+  const [isGSTCompleted, setIsGSTCompleted] = useState(null);
+ 
+  useEffect(() => {
+    const fetchGSTStatus = async () => {
+      try {
+        // Show loading toast
+        const loadingToast = toast.loading("Loading");
+  
+        // Call your function
+        const result = await completedGST();
+  
+        // Dismiss the loading toast
+        toast.dismiss(loadingToast);
+  
+        // Set the result without showing a success toast
+        setIsGSTCompleted(result);
+      } catch (error) {
+        // Dismiss the loading toast and show the error toast
+        toast.dismiss();
+        toast.error(<b>Something is wrong.</b>);
+        console.error("Error fetching GST status:", error);
+      }
+    };
+  
+    fetchGSTStatus();
+  }, []);
+  
+
+  if (isGSTCompleted === null) {
+    return <div>Loading...</div>;
+  }
+
+  if (!isGSTCompleted) {
+    return <div>Please complete your GST details to proceed.</div>;
+  }
+
 
   return (
     <div>
