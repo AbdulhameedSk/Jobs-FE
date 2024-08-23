@@ -23,7 +23,10 @@ export default function Login() {
   const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
   const dispatch = useDispatch();
-
+  const forgotPassword=async()=>{
+    //Complete here 
+    // toast.error('Code not completed')
+  }
   const handleLogin = async () => {
     setLoading(true);
     try {
@@ -117,7 +120,7 @@ export default function Login() {
                 required
               />
             </div>
-
+<button className="text-blue-500" onClick={forgotPassword()}>Forgetton Password?</button>
             <button
               type="submit"
               className={`w-full px-4 py-2 bg-blue-600 text-white font-semibold rounded-lg hover:bg-blue-700 transition duration-200 ${

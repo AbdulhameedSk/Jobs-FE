@@ -82,5 +82,6 @@ export const endpoint = {
   ADD_CATEGORY_ENTERPRISE:"api/category/addCategoryEnterprise",
   ADD_VIDEO_ENTERPRISE:"api/categoryvideos/saveVideoEnterprise",
   ENTERPRISE_JOBS:"api/job-portal/getAllJobsEnterprise",
+  ENTERPRISE_KIND:"api/category/getCategoryByKind"
   };
   

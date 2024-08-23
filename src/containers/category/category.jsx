@@ -1,6 +1,6 @@
 import  { useState, useEffect, useRef } from "react";
 import Header from "../../components/Boilers/Header.jsx";
-import "../../containers/Category/Category.css";
+// import "../../containers/Category/Category.css";
 import CustomIcon from "../../components/CustomIcon";
 import { endpoint } from "../../apis/endpoint";
 import { useSelector } from "react-redux";
@@ -54,7 +54,47 @@ const Category = () => {
   const [thanksDescFilter, setThanksDescFilter] = useState([null, 0]);
   const [filterThanksDesc, setFilterThanksDesc] = useState("");
   const [isThanksDescFilter, setIsThanksDescFilter] = useState(false);
+  const [kinds, setKinds] = useState([]);
+  const [selectedKind, setSelectedKind] = useState("");
+  const getKind = async (kind) => {
+    const authToken = localStorage.getItem("token");
+    try {
+      const response = await apiHandler({
+        url: `${endpoint.BASE_URL_STAGING}${endpoint.ENTERPRISE_KIND}`,
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${authToken}`,
+        },
+        data: {
+          kind: kind,
+        },
+      });
+  
+      console.log(response.data);
+      return response.data;
+    } catch (error) {
+      console.error("Failed to fetch kind data:", error);
+      throw error;
+    }
+  };  useEffect(() => {
+    const fetchKinds = async () => {
+      try {
+        const kindsData = await getKind();
+        setKinds(kindsData);
+      } catch (error) {
+        console.error("Failed to fetch kinds:", error);
+      }
+    };
+    fetchKinds();
+  }, []);
 
+  // Fetch categories when a kind is selected
+  useEffect(() => {
+    if (selectedKind) {
+      getCategories(selectedKind);
+    }
+  }, [selectedKind]);
   const clickFunctioArray = [
     () => {
       setFilterType("text");
@@ -230,30 +270,31 @@ const Category = () => {
     getCategoryByID(id);
   };
 
-  const getCategories = async (page = 1, clear) => {
+  const getCategories = async (page = 1, clear, kind) => {
     const token = localStorage.getItem("token");
     if (isEditCategory) {
       return;
     }
-    if (searchInput?.length == 0) {
+    if (searchInput?.length === 0) {
       setIsLoading(true);
     }
     try {
       const response = await apiHandler({
         url: endpoint.CATEGORY_ENTERPRISE,
         method: "POST",
-        authToken: authToken,
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${authToken}`,
+        },
         data: {
           page: page,
           limit: rowsPerPage,
           searchTerm: searchInput,
+          kind: kind, // Pass the selected kind
           nameFilter: !clear && isNameFilter ? nameFilter : null,
           descFilter: !clear && isDescFilter ? descFilter : null,
-          thanksdescFilter:
-            !clear && isThanksDescFilter ? thanksDescFilter : null,
+          thanksdescFilter: !clear && isThanksDescFilter ? thanksDescFilter : null,
         },
-        "Content-Type": "application/json",
-          Authorization: `Bearer ${token}`,
       });
       if (response.status === 200) {
         setCategories(response.data.data.category);
@@ -264,12 +305,13 @@ const Category = () => {
       } else {
         toast.error("Failed to fetch Categories");
       }
-    } catch {
+    } catch (error) {
       toast.error("Failed to fetch Categories");
     } finally {
       setIsLoading(false);
     }
   };
+  
 const getCategoryByID = async (id) => {
     setIsLoading(true);
     try {
@@ -417,227 +459,105 @@ const getCategoryByID = async (id) => {
 
 if(!isGSTCompleted){
   return <div>Registration complete karna padega</div>
-}
-  return (
-    <div>
-      <Header
-        title={"Category"}
-        icon={"FaPlus" }
-        className={isEditCategory ? "rotate-icon" : " "}
-        onClickFunc={handleIsEditCategory}
+}return (
+  <div>
+    <Header
+      title={"Category"}
+      icon={"FaPlus"}
+      className={isEditCategory ? "rotate-45" : ""}
+      onClickFunc={handleIsEditCategory}
+      searchInput={searchInput}
+      setSearchInput={setSearchInput}
+      clearFilter={filterApplied}
+      clearFilterFun={triggerClearFilter}
+      onSearchInput={getCategories}
+    />
+
+<div className="my-4 flex justify-end ">
+  <div className="relative pr-10">
+    {/* <label htmlFor="kind" className="block text-gray-700 font-semibold mb-2">Select Kind:</label> */}
+    <select
+      id="kind"
+      value={selectedKind}
+      onChange={(e) => setSelectedKind(e.target.value)}
+      className="mt-1 block w-40 p-2 border border-gray-300 rounded-lg bg-white shadow-md focus:border-blue-500 focus:ring-1 focus:ring-blue-500 transition duration-150 ease-in-out"
+    >
+      <option value="" className="text-gray-500">Select Kind</option>
+      {/* {kinds.map((kind) => (
+        <option key={kind.id} value={kind.name} className="text-gray-700">
+          {kind.name}
+        </option>
+      ))} */}
+            <option value="Free to public" className="text-gray-500">Free to public</option>
+            <option value="For Employees" className="text-gray-500">For Employees</option>
+            <option value="Paid Courses" className="text-gray-500">Paid Courses</option>
+
+    </select>
+  </div>
+</div>
+
+
+    {isLoading && <Spinner show={isLoading} closeModal={() => setIsLoading(false)} />}
+
+    {/* Category List */}
+    {!isLoading && (
+      <CategoryList
+        tableRef={tableRef}
+        categories={categories}
+        isLoading={isLoading}
+        setIsLoading={setIsLoading}
+        handleEditCategory={handleEditCategory}
+        getCategories={getCategories}
         searchInput={searchInput}
-        setSearchInput={setSearchInput}
-        clearFilter={filterApplied}
-        clearFilterFun={triggerClearFilter}
-        onSearchInput={getCategories}
+        setFiltersApplied={setFiltersApplied}
+        totalPages={totalPages}
+        currentPage={currentPage}
+        rowsPerPage={rowsPerPage}
+        handlePageChange={handlePageChange}
+        clickFunctioArray={clickFunctioArray}
+        clickSortFunctionArray={clickSortFunctionArray}
+        clearAllFilters={clearAllFilters}
       />
-      {isEditCategory ? (
-        <>
-          <div className="category-container">
-            <h1 className="h2-style">
-              {category ? "Edit Category" : "Add Category"}
-            </h1>
-            <div className="category-name">
-              <input
-                type="text"
-                placeholder="Enter Category Name"
-                value={categoryName}
-                onChange={handleNameInputChange}
-              />
-            </div>
-            <div className="category-description">
-              <textarea
-                type="text"
-                placeholder="Enter Category Description"
-                value={categoryDescription}
-                onChange={handleDescriptionInputChange}
-              ></textarea>
-            </div>
-            <div className="category-flex">
-              <div className="partner-modal-btn-border category-button">
-                <div
-                  style={{
-                    display: "flex",
-                    justifyContent: "space-between",
-                  }}
-                >
-                  <label className="partner-modal-icon-clr">
-                    <CustomIcon name={"RiAttachment2"} />
-                    <input
-                      type="file"
-                      accept="image/*"
-                      style={{ display: "none" }}
-                      onChange={handleCategoryFileChange1}
-                    />
-                    <div className="partner-modal-icon-text">
-                      {categoryFile1
-                        ? categoryFile1.name
-                          ? categoryFile1.name
-                          : "welcome_image.jpg"
-                        : "Upload Category Welcome Image"}
-                    </div>
-                    {categoryFile1 && (
-                      <CustomIcon
-                        name={"TiDeleteOutline"}
-                        className="delete-icon"
-                        onClick={handleRemoveCategoryFile1}
-                      />
-                    )}
-                  </label>
-                </div>
-              </div>
-              <div className="partner-modal-btn-border category-button">
-                <div
-                  style={{
-                    display: "flex",
-                    justifyContent: "space-between",
-                  }}
-                >
-                  <label className="partner-modal-icon-clr">
-                    <CustomIcon name={"RiAttachment2"} />
-                    <input
-                      type="file"
-                      accept="image/*"
-                      style={{ display: "none" }}
-                      onChange={handleCategoryFileChange2}
-                    />
-                    <div className="partner-modal-icon-text">
-                      {categoryFile2
-                        ? categoryFile2.name
-                          ? categoryFile2.name
-                          : "category_image.jpg"
-                        : "Upload Image For Category"}
-                    </div>
-                    {categoryFile2 && (
-                      <CustomIcon
-                        name={"TiDeleteOutline"}
-                        className="delete-icon"
-                        onClick={handleRemoveCategoryFile2}
-                      />
-                    )}
-                  </label>
-                </div>
-              </div>
-            </div>
-            <div className="category-Completedtask">
-              <textarea
-                type="text"
-                placeholder="Enter Category Completed Thanks Message"
-                value={categoryCompletedTask}
-                onChange={handleCompletedTaskInputChange}
-              ></textarea>
-            </div>
-            <div className="partner-modal-btn-border category-button category-completed-task-upload">
-              <div
-                style={{
-                  display: "flex",
-                  justifyContent: "space-between",
-                }}
-              >
-                <label className="partner-modal-icon-clr">
-                  <CustomIcon name={"RiAttachment2"} />
-                  <input
-                    type="file"
-                    accept="image/*"
-                    style={{ display: "none" }}
-                    onChange={handleCompletedTaskFileChange}
-                  />
-                  <div className="partner-modal-icon-text">
-                    {categoryCompletedTaskFile
-                      ? categoryCompletedTaskFile.name
-                        ? categoryCompletedTaskFile.name
-                        : "thanks_image.jpg"
-                      : "Upload Image For Completed Task"}
-                  </div>
-                  {categoryCompletedTaskFile && (
-                    <CustomIcon
-                      name={"TiDeleteOutline"}
-                      className="delete-icon"
-                      onClick={handleRemoveCompletedTaskFile}
-                    />
-                  )}
-                </label>
-              </div>
-            </div>
-            <button
-              disabled={isLoading}
-              onClick={
-                category
-                  ? () => handleSaveCategory({ isEdit: true })
-                  : handleSaveCategory
-              }
-              className="save-category-button"
-            >
-              {isLoading
-                ? "Loading..."
-                : category
-                ? "Update Category"
-                : "Save Category"}
-            </button>
-          </div>
-        </>
-      ) : (
-        <>
-          <CategoryList
-            tableRef={tableRef}
-            categories={categories}
-            isLoading={isLoading}
-            setIsLoading={setIsLoading}
-            handleEditCategory={handleEditCategory}
-            getCategories={getCategories}
-            searchInput={searchInput}
-            setFiltersApplied={setFiltersApplied}
-            totalPages={totalPages}
-            currentPage={currentPage}
-            rowsPerPage={rowsPerPage}
-            handlePageChange={handlePageChange}
-            clickFunctioArray={clickFunctioArray}
-            clickSortFunctionArray={clickSortFunctionArray}
-            clearAllFilters={clearAllFilters}
-          />
-          {filterModal && filterType === "text" && (
-            <CustomFilterModal
-              onClose={() => setFilterModal(false)}
-              filterText={filterText}
-              filterInput={
-                filterText === "Name"
-                  ? filterName
-                  : filterText === "Description"
-                  ? filterDesc
-                  : filterText === "Thanks Description"
-                  ? filterThanksDesc
-                  : filterName
-              }
-              setFilterInput={
-                filterText === "Name"
-                  ? setFilterName
-                  : filterText === "Description"
-                  ? setFilterDesc
-                  : filterText === "Thanks Description"
-                  ? setFilterThanksDesc
-                  : setFilterName
-              }
-              handleFilter={() => {
-                if (filterText === "Name") {
-                  setIsNameFilter(true);
-                } else if (filterText === "Description") {
-                  setIsDescFilter(true);
-                } else if (filterText === "Thanks Description") {
-                  setIsThanksDescFilter(true);
-                } else {
-                  setIsNameFilter(true);
-                }
-              }}
-              type={filterType}
-            />
-          )}
-        </>
-      )}
-      {isLoading && (
-        <Spinner show={isLoading} closeModal={() => setIsLoading(false)} />
-      )}
-    </div>
-  );
+    )}
+
+    {filterModal && filterType === "text" && (
+      <CustomFilterModal
+        onClose={() => setFilterModal(false)}
+        filterText={filterText}
+        filterInput={
+          filterText === "Name"
+            ? filterName
+            : filterText === "Description"
+            ? filterDesc
+            : filterText === "Thanks Description"
+            ? filterThanksDesc
+            : filterName
+        }
+        setFilterInput={
+          filterText === "Name"
+            ? setFilterName
+            : filterText === "Description"
+            ? setFilterDesc
+            : filterText === "Thanks Description"
+            ? setFilterThanksDesc
+            : setFilterName
+        }
+        handleFilter={() => {
+          if (filterText === "Name") {
+            setIsNameFilter(true);
+          } else if (filterText === "Description") {
+            setIsDescFilter(true);
+          } else if (filterText === "Thanks Description") {
+            setIsThanksDescFilter(true);
+          } else {
+            setIsNameFilter(true);
+          }
+        }}
+        type={filterType}
+      />
+    )}
+  </div>
+);
 };
 
 export default Category;
