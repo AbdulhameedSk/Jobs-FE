@@ -39,7 +39,7 @@ export default function CategoryList({
   const handleDelete = async (id) => {
     setIsLoading(true);
     try {
-      const response = await fetch(endpoint.CATEGORY_DELETE, {
+      const response = await fetch(`${endpoint.BASE_URL_STAGING}${endpoint.CATEGORY_DELETE}`, {
         method: "DELETE",
         headers: {
           "Content-Type": "application/json",

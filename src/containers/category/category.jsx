@@ -487,7 +487,6 @@ if(!isGSTCompleted){
       onChange={(e) => setSelectedKind(e.target.value)}
       className="mt-1 block w-40 p-2 border border-gray-300 rounded-lg bg-white shadow-md focus:border-blue-500 focus:ring-1 focus:ring-blue-500 transition duration-150 ease-in-out"
     >
-      <option value="" className="text-gray-500">Select Type of Course</option>
       {/* {kinds.map((kind) => (
         <option key={kind.id} value={kind.name} className="text-gray-700">
           {kind.name}
