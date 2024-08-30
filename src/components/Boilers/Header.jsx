@@ -3,6 +3,7 @@ import CustomIcon from "../../components/CustomIcon.jsx";
 import PROFILE from "../../assets/ChauwkLogo/CHAUWK_SYMBOL_NIGHT.png";
 import { useNavigate } from 'react-router-dom';
 import CustomProfileEdit from "../CustomProfileEdit/CustomProfileEdit.jsx";
+// import Chanege from "../../components/Change.jsx";
 const Header = ({
   title,
   icon,
@@ -36,10 +37,15 @@ const Header = ({
   useEffect(() => {
     onSearchInput();
   }, [searchInput]);
+
+
+
 const navigate=useNavigate();
   return (
     <>
+    
       <div className="sticky top-0 z-100 w-full bg-white shadow-md h-[12vh] flex justify-between items-center px-5">
+      {/* <Chanege/> */}
         <div className="text-2xl font-bold text-[#515b6f]">{title}</div>
         <div>
           <div className="flex gap-2">

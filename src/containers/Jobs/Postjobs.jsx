@@ -162,9 +162,10 @@ export default function PostJobs({ postJob, job = null }) {
                 name="status"
                 onChange={handleChange}
               >
-                <MenuItem value={"Active"}>Active</MenuItem>
+                <MenuItem value={"Active"}>Publish</MenuItem>
                 <MenuItem value={"Closed"}>Closed</MenuItem>
-                <MenuItem value={"Unpublished"}>Unpublished</MenuItem>
+                <MenuItem value={"UnPublish"}>Un Published</MenuItem>
+                //Notification Toast for Publish and Unpublish
               </Select>
             </FormControl>
             <FormControl fullWidth className="dropdown">

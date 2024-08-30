@@ -18,6 +18,8 @@ const Category = () => {
   const authToken = useSelector((state) => state.auth.authToken);
   const [searchInput, setSearchInput] = useState("");
   const [categoryName, setCategoryName] = useState("");
+  const [kind, setKind] = useState("");
+  const [type, setType] = useState("");
   const [categoryDescription, setCategoryDescription] = useState("");
   const [categoryFile1, setCategoryFile1] = useState(null);
   const [categoryFile2, setCategoryFile2] = useState(null);
@@ -57,10 +59,9 @@ const Category = () => {
   const [kinds, setKinds] = useState([]);
   const [selectedKind, setSelectedKind] = useState("");
   const getKind = async (kind) => {
-    const authToken = localStorage.getItem("token");
     try {
       const response = await apiHandler({
-        url: `${endpoint.BASE_URL_STAGING}${endpoint.ENTERPRISE_KIND}`,
+        url: `${endpoint.BASE_URL_STAGING}${endpoint.CATEGORY_ENTERPRISE}`,
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -200,6 +201,9 @@ const Category = () => {
   const handleNameInputChange = (event) => {
     setCategoryName(event.target.value);
   };
+  const handleKindInputChange = (event) => {
+    setSelectedKind(event.target.value);
+  };
 
   const handleDescriptionInputChange = (event) => {
     setCategoryDescription(event.target.value);
@@ -220,12 +224,14 @@ const Category = () => {
     if (categoryCompletedTaskFile)
       formData.append("thanksimg", categoryCompletedTaskFile);
     formData.append("name", categoryName);
+    formData.append("kind", selectedKind);
+    formData.append("type", type);
     formData.append("description", categoryDescription);
     formData.append("thanksdescription", categoryCompletedTask);
     setIsLoaded(true);
     try {
       const response = await apiHandler({
-        url: endpoint.ADD_CATEGORY_ENTERPRISE,
+        url: endpoint.CATEGORY_SAVE,
         method: "POST",
         data: formData,
         authToken: authToken,
@@ -271,7 +277,6 @@ const Category = () => {
   };
 
   const getCategories = async (page = 1, clear, kind) => {
-    const token = localStorage.getItem("token");
     if (isEditCategory) {
       return;
     }
@@ -287,10 +292,12 @@ const Category = () => {
           Authorization: `Bearer ${authToken}`,
         },
         data: {
-          page: page,
+          type : page,
           limit: rowsPerPage,
           searchTerm: searchInput,
-          kind: kind, // Pass the selected kind
+          by: userId,
+          
+          kind: page, // Pass the selected kind
           nameFilter: !clear && isNameFilter ? nameFilter : null,
           descFilter: !clear && isDescFilter ? descFilter : null,
           thanksdescFilter: !clear && isThanksDescFilter ? thanksDescFilter : null,
@@ -459,12 +466,12 @@ const getCategoryByID = async (id) => {
 
 if(!isGSTCompleted){
   return <div>Registration complete karna padega</div>
-}return (
+} return (
   <div>
     <Header
       title={"Category"}
-      icon={"FaPlus"}
-      className={isEditCategory ? "rotate-45" : ""}
+      icon={true ? "FaPlus" : ""}
+      className={isEditCategory ? "rotate-icon" : " "}
       onClickFunc={handleIsEditCategory}
       searchInput={searchInput}
       setSearchInput={setSearchInput}
@@ -472,17 +479,15 @@ if(!isGSTCompleted){
       clearFilterFun={triggerClearFilter}
       onSearchInput={getCategories}
     />
-
-<div className="my-4 flex justify-end ">
+ {!isEditCategory  && (   <div className="my-4 flex justify-end ">
   <div className="relative pr-10">
-    {/* <label htmlFor="kind" className="block text-gray-700 font-semibold mb-2">Select Kind:</label> */}
     <select
       id="kind"
       value={selectedKind}
       onChange={(e) => setSelectedKind(e.target.value)}
       className="mt-1 block w-40 p-2 border border-gray-300 rounded-lg bg-white shadow-md focus:border-blue-500 focus:ring-1 focus:ring-blue-500 transition duration-150 ease-in-out"
     >
-      <option value="" className="text-gray-500">Select Kind</option>
+      <option value="" className="text-gray-500">Select Type of Course</option>
       {/* {kinds.map((kind) => (
         <option key={kind.id} value={kind.name} className="text-gray-700">
           {kind.name}
@@ -494,67 +499,218 @@ if(!isGSTCompleted){
 
     </select>
   </div>
+</div>)}
+    {isEditCategory ? (
+           <>
+        <div className="max-w-3xl mx-auto p-2 bg-white shadow-lg rounded-lg">
+          <h1 className="text-2xl font-bold mb-2 text-gray-800">
+            {category ? "Edit Category" : "Add Category"}
+          </h1>
+          
+      
+          <div className="mb-2">
+            <input
+              type="text"
+              placeholder="Enter Category Name"
+              value={categoryName}
+              onChange={handleNameInputChange}
+              className="w-full px-1 py-1 border border-gray-300 rounded-md focus:ring focus:ring-blue-200 focus:outline-none"
+            />
+          </div>
+          <div className="mb-2">
+  <select
+    value={selectedKind}
+    onChange={handleKindInputChange}
+    className="w-full px-1 py-1 border border-gray-300 rounded-md focus:ring focus:ring-blue-200 focus:outline-none"
+  >
+    <option value="">Select Category Type</option>
+    <option value="Free to Public">Free to Public</option>
+    <option value="For Employees">For Employees</option>
+    <option value="Paid Courses">Paid Courses</option>
+  </select>
 </div>
 
-
-    {isLoading && <Spinner show={isLoading} closeModal={() => setIsLoading(false)} />}
-
-    {/* Category List */}
-    {!isLoading && (
-      <CategoryList
-        tableRef={tableRef}
-        categories={categories}
-        isLoading={isLoading}
-        setIsLoading={setIsLoading}
-        handleEditCategory={handleEditCategory}
-        getCategories={getCategories}
-        searchInput={searchInput}
-        setFiltersApplied={setFiltersApplied}
-        totalPages={totalPages}
-        currentPage={currentPage}
-        rowsPerPage={rowsPerPage}
-        handlePageChange={handlePageChange}
-        clickFunctioArray={clickFunctioArray}
-        clickSortFunctionArray={clickSortFunctionArray}
-        clearAllFilters={clearAllFilters}
+          <div className="mb-2">
+            <textarea
+              type="text"
+              placeholder="Enter Category Description"
+              value={categoryDescription}
+              onChange={handleDescriptionInputChange}
+              className="w-full px-2 py-1 border border-gray-300 rounded-md focus:ring focus:ring-blue-200 focus:outline-none"
+            ></textarea>
+          </div>
+      
+          <div className="flex flex-wrap gap-2 mb-4">
+  <div className="w-1/2 border border-dashed border-gray-400 rounded-md p-2 text-center ">
+    <label className="cursor-pointer">
+      <CustomIcon name={"RiAttachment2"} />
+      <input
+        type="file"
+        accept="image/*"
+        style={{ display: "none" }}
+        onChange={handleCategoryFileChange1}
       />
+      <div className="mt-1 text-sm text-gray-600">
+        {categoryFile1
+          ? categoryFile1.name
+            ? categoryFile1.name
+            : "welcome_image.jpg"
+          : "Upload Category Welcome Image"}
+      </div>
+      {categoryFile1 && (
+        <CustomIcon
+          name={"TiDeleteOutline"}
+          className="text-red-500 mt-1 cursor-pointer"
+          onClick={handleRemoveCategoryFile1}
+        />
+      )}
+    </label>
+  </div>
+  <div className="w-1/2 border border-dashed border-gray-400 rounded-md p-2 text-center">
+    <label className="cursor-pointer">
+      <CustomIcon name={"RiAttachment2"} />
+      <input
+        type="file"
+        accept="image/*"
+        style={{ display: "none" }}
+        onChange={handleCategoryFileChange2}
+      />
+      <div className="mt-1 text-sm text-gray-600">
+        {categoryFile2
+          ? categoryFile2.name
+            ? categoryFile2.name
+            : "category_image.jpg"
+          : "Upload Image For Category"}
+      </div>
+      {categoryFile2 && (
+        <CustomIcon
+          name={"TiDeleteOutline"}
+          className="text-red-500 mt-1 cursor-pointer"
+          onClick={handleRemoveCategoryFile2}
+        />
+      )}
+    </label>
+  </div>
+</div>
+
+          <div className="mb-2">
+            <textarea
+              type="text"
+              placeholder="Enter Category Completed Thanks Message"
+              value={categoryCompletedTask}
+              onChange={handleCompletedTaskInputChange}
+              className="w-full px-2 py-1 border border-gray-300 rounded-md focus:ring focus:ring-blue-200 focus:outline-none"
+            ></textarea>
+          </div>
+      
+          <div className="w-full border border-dashed border-gray-400 rounded-md p-2 text-center mb-4">
+            <label className="cursor-pointer">
+              <CustomIcon name={"RiAttachment2"} />
+              <input
+                type="file"
+                accept="image/*"
+                style={{ display: "none" }}
+                onChange={handleCompletedTaskFileChange}
+              />
+              <div className="mt-1 text-sm text-gray-600">
+                {categoryCompletedTaskFile
+                  ? categoryCompletedTaskFile.name
+                    ? categoryCompletedTaskFile.name
+                    : "thanks_image.jpg"
+                  : "Upload Image For Completed Task"}
+              </div>
+              {categoryCompletedTaskFile && (
+                <CustomIcon
+                  name={"TiDeleteOutline"}
+                  className="text-red-500 mt-1 cursor-pointer"
+                  onClick={handleRemoveCompletedTaskFile}
+                />
+              )}
+            </label>
+          </div>
+      
+          <button
+            disabled={isLoading}
+            onClick={
+              category
+                ? () => handleSaveCategory({ isEdit: true })
+                : handleSaveCategory
+            }
+            className={`w-full py-2 text-white font-bold rounded-md ${
+              isLoading
+                ? "bg-gray-400 cursor-not-allowed"
+                : "bg-blue-600 hover:bg-blue-700"
+            } focus:outline-none focus:ring focus:ring-blue-300`}
+          >
+            {isLoading
+              ? "Loading..."
+              : category
+              ? "Update Category"
+              : "Save Category"}
+          </button>
+        </div>
+      </>
+    
+    
+    ) : (
+      <>
+        <CategoryList
+          tableRef={tableRef}
+          categories={categories}
+          isLoading={isLoading}
+          setIsLoading={setIsLoading}
+          handleEditCategory={handleEditCategory}
+          getCategories={getCategories}
+          searchInput={searchInput}
+          setFiltersApplied={setFiltersApplied}
+          totalPages={totalPages}
+          currentPage={currentPage}
+          rowsPerPage={rowsPerPage}
+          handlePageChange={handlePageChange}
+          clickFunctioArray={clickFunctioArray}
+          clickSortFunctionArray={clickSortFunctionArray}
+          clearAllFilters={clearAllFilters}
+        />
+        {filterModal && filterType === "text" && (
+          <CustomFilterModal
+            onClose={() => setFilterModal(false)}
+            filterText={filterText}
+            filterInput={
+              filterText === "Name"
+                ? filterName
+                : filterText === "Description"
+                ? filterDesc
+                : filterText === "Thanks Description"
+                ? filterThanksDesc
+                : filterName
+            }
+            setFilterInput={
+              filterText === "Name"
+                ? setFilterName
+                : filterText === "Description"
+                ? setFilterDesc
+                : filterText === "Thanks Description"
+                ? setFilterThanksDesc
+                : setFilterName
+            }
+            handleFilter={() => {
+              if (filterText === "Name") {
+                setIsNameFilter(true);
+              } else if (filterText === "Description") {
+                setIsDescFilter(true);
+              } else if (filterText === "Thanks Description") {
+                setIsThanksDescFilter(true);
+              } else {
+                setIsNameFilter(true);
+              }
+            }}
+            type={filterType}
+          />
+        )}
+      </>
     )}
-
-    {filterModal && filterType === "text" && (
-      <CustomFilterModal
-        onClose={() => setFilterModal(false)}
-        filterText={filterText}
-        filterInput={
-          filterText === "Name"
-            ? filterName
-            : filterText === "Description"
-            ? filterDesc
-            : filterText === "Thanks Description"
-            ? filterThanksDesc
-            : filterName
-        }
-        setFilterInput={
-          filterText === "Name"
-            ? setFilterName
-            : filterText === "Description"
-            ? setFilterDesc
-            : filterText === "Thanks Description"
-            ? setFilterThanksDesc
-            : setFilterName
-        }
-        handleFilter={() => {
-          if (filterText === "Name") {
-            setIsNameFilter(true);
-          } else if (filterText === "Description") {
-            setIsDescFilter(true);
-          } else if (filterText === "Thanks Description") {
-            setIsThanksDescFilter(true);
-          } else {
-            setIsNameFilter(true);
-          }
-        }}
-        type={filterType}
-      />
+    {isLoading && (
+      <Spinner show={isLoading} closeModal={() => setIsLoading(false)} />
     )}
   </div>
 );
