@@ -348,7 +348,7 @@ const Jobs = () => {
     try {
       const response = await apiHandler({
         method: jobId ? "PUT" : "POST",
-        url: jobId ? endpoint.JOB_UPDATE : endpoint.JOB_CREATE,
+        url: jobId ? endpoint.UPDATE_JOB : endpoint.POST_JOB,
         data: jobId ? { ...data, _id: jobId } : data,
         authToken: authToken,
         headers: {
@@ -454,10 +454,11 @@ const Jobs = () => {
       )}
       {isPosting ? (
         <PostJobs
-          onClose={handleIsPosting}
-          onSubmit={postJob}
-          job={selectedJob}
-        />
+        onClose={handleIsPosting}
+        postJob={postJob}
+        job={selectedJob}
+      />
+      
       ) : (
         <>
           <div className="jobs">

@@ -80,7 +80,7 @@ export const endpoint = {
   ENTERPRISE_DETAILS:"api/enterprise/getUserDetails", 
   CATEGORY_ENTERPRISE:"api/category/getCategoryEnterprise",
   ADD_CATEGORY_ENTERPRISE:"api/category/addCategoryEnterprise",
-  ADD_VIDEO_ENTERPRISE:"api/categoryvideos/saveVideoEnterprise",
+  ADD_VIDEO_ENTERPRISE:"api/categoryvideos/",
   ENTERPRISE_JOBS:"api/job-portal/getAllJobsEnterprise",
   ENTERPRISE_KIND:"api/category/getCategoryByKind"
   };

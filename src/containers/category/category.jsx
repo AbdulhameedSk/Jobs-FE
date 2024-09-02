@@ -81,7 +81,7 @@ const Category = () => {
   };  useEffect(() => {
     const fetchKinds = async () => {
       try {
-        const kindsData = await getKind();
+        const kindsData = await getKind("Free to public");
         setKinds(kindsData);
       } catch (error) {
         console.error("Failed to fetch kinds:", error);
@@ -201,8 +201,10 @@ const Category = () => {
   const handleNameInputChange = (event) => {
     setCategoryName(event.target.value);
   };
-  const handleKindInputChange = (event) => {
-    setSelectedKind(event.target.value);
+  const handleKindInputChange = (e) => {
+    console.log("Selected Kind:", e.target.value);
+    setSelectedKind(e.target.value);
+    getCategories(e.target.value);
   };
 
   const handleDescriptionInputChange = (event) => {
@@ -225,7 +227,6 @@ const Category = () => {
       formData.append("thanksimg", categoryCompletedTaskFile);
     formData.append("name", categoryName);
     formData.append("kind", selectedKind);
-    formData.append("type", type);
     formData.append("description", categoryDescription);
     formData.append("thanksdescription", categoryCompletedTask);
     setIsLoaded(true);
@@ -276,7 +277,7 @@ const Category = () => {
     getCategoryByID(id);
   };
 
-  const getCategories = async (page = 1, clear, kind) => {
+  const getCategories = async (kind = 1, clear) => {
     if (isEditCategory) {
       return;
     }
@@ -292,12 +293,11 @@ const Category = () => {
           Authorization: `Bearer ${authToken}`,
         },
         data: {
-          type : page,
+          type: kind,
           limit: rowsPerPage,
           searchTerm: searchInput,
           by: userId,
-          
-          kind: page, // Pass the selected kind
+          kind: selectedKind, // Pass the selected kind
           nameFilter: !clear && isNameFilter ? nameFilter : null,
           descFilter: !clear && isDescFilter ? descFilter : null,
           thanksdescFilter: !clear && isThanksDescFilter ? thanksDescFilter : null,
@@ -318,7 +318,6 @@ const Category = () => {
       setIsLoading(false);
     }
   };
-  
 const getCategoryByID = async (id) => {
     setIsLoading(true);
     try {
@@ -487,11 +486,7 @@ if(!isGSTCompleted){
       onChange={(e) => setSelectedKind(e.target.value)}
       className="mt-1 block w-40 p-2 border border-gray-300 rounded-lg bg-white shadow-md focus:border-blue-500 focus:ring-1 focus:ring-blue-500 transition duration-150 ease-in-out"
     >
-      {/* {kinds.map((kind) => (
-        <option key={kind.id} value={kind.name} className="text-gray-700">
-          {kind.name}
-        </option>
-      ))} */}
+   
             <option value="Free to public" className="text-gray-500">Free to public</option>
             <option value="For Employees" className="text-gray-500">For Employees</option>
             <option value="Paid Courses" className="text-gray-500">Paid Courses</option>

@@ -7,7 +7,6 @@ import {
   Select,
   Slider,
 } from "@mui/material";
-import { apiHandler } from "../../apis/index";
 
 export default function PostJobs({ postJob, job = null }) {
   const [formData, setFormData] = useState({
@@ -162,10 +161,9 @@ export default function PostJobs({ postJob, job = null }) {
                 name="status"
                 onChange={handleChange}
               >
-                <MenuItem value={"Active"}>Publish</MenuItem>
+                <MenuItem value={"Active"}>Active</MenuItem>
                 <MenuItem value={"Closed"}>Closed</MenuItem>
-                <MenuItem value={"UnPublish"}>Un Published</MenuItem>
-                //Notification Toast for Publish and Unpublish
+                <MenuItem value={"Unpublished"}>Unpublished</MenuItem>
               </Select>
             </FormControl>
             <FormControl fullWidth className="dropdown">
@@ -338,7 +336,7 @@ export default function PostJobs({ postJob, job = null }) {
         </button>
       ) : (
         <button
-          className="add-button"
+          className="add-button bg-blue-600 text-white hover:bg-blue-700 h-10 w-32 rounded-md" 
           onClick={() => {
             postJob(formData);
           }}

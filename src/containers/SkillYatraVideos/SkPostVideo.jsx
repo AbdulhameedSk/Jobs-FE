@@ -42,25 +42,47 @@ export default function SkPostVideo({
 
   const handleUploadVideo = () => {
     const { link } = formData;
+  
+    // Helper function to extract YouTube ID
     const getYoutubeId = (url) => {
-      const urlObj = new URL(url);
-      return urlObj.searchParams.get("v");
+      try {
+        const urlObj = new URL(url);
+        // Handle shortened youtu.be URLs
+        if (urlObj.hostname === "youtu.be") {
+          return urlObj.pathname.slice(1); // Get the ID from the pathname
+        }
+        // Handle standard youtube.com URLs
+        return urlObj.searchParams.get("v");
+      } catch (error) {
+        console.error("Invalid YouTube URL:", url);
+        return null;
+      }
     };
+  
     const youtubeId = getYoutubeId(link);
+  
+    // Validate that the YouTube ID was successfully extracted
+    if (!youtubeId) {
+      console.error("Failed to extract YouTube ID");
+      toast.error("Please enter a valid YouTube link");
+      return; // Stop the function if youtubeId is invalid
+    }
+  
     const thumbnail = `http://img.youtube.com/vi/${youtubeId}/maxresdefault.jpg`;
+  
     const updatedFormData = {
       ...formData,
       youtubeId: youtubeId,
       thumbnail: thumbnail,
       status: "In Approval",
     };
-    if (isEdit) {
-      postVideo(updatedFormData);
-    } else {
-      postVideo(updatedFormData);
-    }
+  
+    console.log("Updated Form Data:", updatedFormData); // Debugging log
+  
+    // Submit the updated form data
+    postVideo(updatedFormData);
   };
-
+  
   const handleMediaFile = (e) => {
     setMediaFile(e.target.files[0]);
     setFormData({ ...formData, background: e.target.files[0] });
