@@ -454,16 +454,15 @@ const Jobs = () => {
       )}
       {isPosting ? (
         <PostJobs
-        onClose={handleIsPosting}
-        postJob={postJob}
-        job={selectedJob}
-      />
-      
+          onClose={handleIsPosting}
+          onSubmit={postJob}
+          job={selectedJob}
+        />
       ) : (
         <>
-          <div className="jobs">
-            <div className="jobs-table">
-              <h1 className="h2-style">
+          <div className="">
+            <div className="">
+              <h1 className="">
                 {applicantsPage ? (
                   <span>
                     <CustomIcon

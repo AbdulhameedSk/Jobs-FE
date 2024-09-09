@@ -73,22 +73,14 @@ const Category = () => {
       });
   
       console.log(response.data);
+      window.location.reload();
       return response.data;
     } catch (error) {
       console.error("Failed to fetch kind data:", error);
       throw error;
     }
-  };  useEffect(() => {
-    const fetchKinds = async () => {
-      try {
-        const kindsData = await getKind("Free to public");
-        setKinds(kindsData);
-      } catch (error) {
-        console.error("Failed to fetch kinds:", error);
-      }
-    };
-    fetchKinds();
-  }, []);
+  };  
+  
 
   // Fetch categories when a kind is selected
   useEffect(() => {
@@ -297,7 +289,7 @@ const Category = () => {
           limit: rowsPerPage,
           searchTerm: searchInput,
           by: userId,
-          kind: selectedKind, // Pass the selected kind
+          kind: selectedKind,
           nameFilter: !clear && isNameFilter ? nameFilter : null,
           descFilter: !clear && isDescFilter ? descFilter : null,
           thanksdescFilter: !clear && isThanksDescFilter ? thanksDescFilter : null,
@@ -487,7 +479,7 @@ if(!isGSTCompleted){
       className="mt-1 block w-40 p-2 border border-gray-300 rounded-lg bg-white shadow-md focus:border-blue-500 focus:ring-1 focus:ring-blue-500 transition duration-150 ease-in-out"
     >
    
-            <option value="Free to public" className="text-gray-500">Free to public</option>
+            <option value="Free to Public" className="text-gray-500">Free to public</option>
             <option value="For Employees" className="text-gray-500">For Employees</option>
             <option value="Paid Courses" className="text-gray-500">Paid Courses</option>
 

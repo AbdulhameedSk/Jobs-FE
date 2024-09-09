@@ -9,6 +9,8 @@ import Category from "./containers/Category/Category";
 import SideBarMenu from './components/Boilers/SideBarMenu';
 import SkillYatraVideos from "./containers/SkillYatraVideos/SkillYatraVideos";
 import Jobs from "./containers/Jobs/Jobs";
+import 'bootstrap/dist/css/bootstrap.min.css';
+
 function App() {
   return (
     <>
