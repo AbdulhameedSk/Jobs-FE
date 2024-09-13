@@ -85,5 +85,7 @@ export const endpoint = {
   ENTERPRISE_JOBS:"api/job-portal/getAllJobsEnterprise",
   ENTERPRISE_KIND:"api/category/getCategoryByKind",
   CATEGORY_EMPLOYEES:"api/enterprise/getPermissionCategories",
+  FETCH_COURSE_PERMISSIONS:"api/enterprise/fetchPermissions",
+  UPDATE_COURSE_PERMISSIONS:"api/enterprise/updatePermissions",
   };
   
