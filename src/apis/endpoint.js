@@ -77,11 +77,13 @@ export const endpoint = {
   PENDING_CATEGORY: "api/category/getPendingCategory",
   COMPLETE_REGISTRATION:"api/enterprise/complete-profile",
   COMPLETE:"api/enterprise/completed",
+  ALL_EMPLOYEES:"api/enterprise/getEmployees",
   ENTERPRISE_DETAILS:"api/enterprise/getUserDetails", 
   CATEGORY_ENTERPRISE:"api/category/getCategoryEnterprise",
   ADD_CATEGORY_ENTERPRISE:"api/category/addCategoryEnterprise",
   ADD_VIDEO_ENTERPRISE:"api/categoryvideos/",
   ENTERPRISE_JOBS:"api/job-portal/getAllJobsEnterprise",
-  ENTERPRISE_KIND:"api/category/getCategoryByKind"
+  ENTERPRISE_KIND:"api/category/getCategoryByKind",
+  CATEGORY_EMPLOYEES:"api/enterprise/getPermissionCategories",
   };
   

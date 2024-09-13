@@ -221,6 +221,7 @@ const Category = () => {
     formData.append("kind", selectedKind);
     formData.append("description", categoryDescription);
     formData.append("thanksdescription", categoryCompletedTask);
+    formData.append("add_request_enterprise", "pending");
     setIsLoaded(true);
     try {
       const response = await apiHandler({

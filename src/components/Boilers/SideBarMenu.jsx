@@ -161,6 +161,28 @@ const SideBarMenu = () => {
            
           </div>
         )}
+        {(
+          <div
+            onClick={() => handleItemClick("Permissions")}
+            style={{
+              backgroundColor:
+                selectedItem === "Permissions" ? "lightblue" : "transparent",
+              borderRadius: "5px",
+            }}
+            className="side-fixing-text-sd"
+          >
+            
+            <div
+              className="sideBar-text-dash"
+              style={{
+                color:
+                  selectedItem === "Permissions" ? "#1e81d2" : "rgb(144 132 132)",
+              }}
+            >
+              Course Permissions
+            </div>
+          </div>
+        )}
       </div>
     </div>
   );
