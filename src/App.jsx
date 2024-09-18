@@ -11,7 +11,10 @@ import SkillYatraVideos from "./containers/SkillYatraVideos/SkillYatraVideos";
 import Jobs from "./containers/Jobs/Jobs";
 import Permission from "./containers/Permissions/Permissions";
 import CoursePermissions from "./containers/Permissions/CoursePermissions";
+import SectionPermission from "./containers/section-permission/sectionpermission";
+import Section from "./containers/section-permission/Section";
 import 'bootstrap/dist/css/bootstrap.min.css';
+import UserTable from "./containers/section-permission/UserTable";
 
 function App() {
   return (
@@ -41,11 +44,13 @@ function App() {
                     <Route exact path="/jobs" element={<Jobs />} />
                     <Route exact path="/coursepermissions" element={<CoursePermissions />} />
                     <Route exact path="/permissions" element={<Permission />} />
-                    <Route
-              exact
-              path="skillyatravideos"
-              element={<SkillYatraVideos />}
-            />
+                    <Route exact="/EmployeePermission" element={<Section/>}/>
+                    <Route exact path="/sectionpermission" element={<Section />} />
+                    <Route exact path="/spermissions" element={<SectionPermission/>}/>
+                    <Route exact path="/skillyatravideos" element={<SkillYatraVideos />} />
+                    <Route exact path="/usertable" element={<UserTable/>}/>
+
+
                   </Routes>
                 </div>
               </div>
@@ -54,7 +59,6 @@ function App() {
         </Routes>
       </BrowserRouter>
     </>
-    
   );
 }
 

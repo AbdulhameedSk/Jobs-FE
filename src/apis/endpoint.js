@@ -87,5 +87,8 @@ export const endpoint = {
   CATEGORY_EMPLOYEES:"api/enterprise/getPermissionCategories",
   FETCH_COURSE_PERMISSIONS:"api/enterprise/fetchPermissions",
   UPDATE_COURSE_PERMISSIONS:"api/enterprise/updatePermissions",
+  SECTION_PERMISSIONS:"/api/enterprise/giveSectionPermissions",
+  ENTERPRISE_ADMINS:"api/enterprise/all-users",
+  ENTERPRISE_EMPLOYEES:"api/enterprise/EnterpriseEmployees"
   };
   

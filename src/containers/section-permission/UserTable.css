@@ -1,0 +1,47 @@
+
+.jobs.users {
+    margin: auto 20px;
+    padding: 20px 20px 20px 0;
+  }
+  .user-table {
+    width: max-content;
+  }
+  .glassblur {
+    background: rgba(221, 221, 221, 0.5);
+    backdrop-filter: blur(10px);
+    border-radius: 10px;
+    padding: 20px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    margin: 20px 0;
+  }
+  .glassblur h3 {
+    color: #505050;
+    font-size: 16px;
+  }
+  .glassblur .flex {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding-top: 10px;
+  }
+  .view-user.video-header .user-details {
+    gap: 30px;
+  }
+  .view-user .user-box .pri {
+    font-size: 20px;
+    font-weight: 600;
+  }
+  .view-user .user-box .sec {
+    font-size: 16px;
+    font-weight: 400;
+  }
+  
+  .user-table .button.red {
+    font-size: 16px;
+  }
+  .user-icon img{
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+  }
+  
