@@ -179,6 +179,7 @@ const Jobs = () => {
         const jobs = response.data.data.jobs;
         setHeaders([
           "Role",
+          "OpenedFor",
           "Industry",
           "City",
           "State",
@@ -196,6 +197,7 @@ const Jobs = () => {
           "text",
           "text",
           "text",
+          "text",
           "range",
           "text",
           "range",
@@ -206,6 +208,7 @@ const Jobs = () => {
           "",
         ]);
         setTextAlign([
+          "left",
           "left",
           "left",
           "center",
@@ -221,6 +224,7 @@ const Jobs = () => {
         ]);
 
         setColumnsizes([
+          "200px",
           "200px",
           "200px",
           "100px",
@@ -250,6 +254,7 @@ const Jobs = () => {
 
           return [
             job.role,
+            job.OpenedFor,
             job.industry,
             job.city,
             job.state,
@@ -315,7 +320,6 @@ const Jobs = () => {
       setIsLoading(false);
     }
   };
- 
 
   const deleteJob = async (jobId) => {
     setIsLoading(true);
@@ -350,7 +354,7 @@ const Jobs = () => {
       const response = await apiHandler({
         method: jobId ? "PUT" : "POST",
         url: jobId ? endpoint.UPDATE_JOB : endpoint.POST_JOB,
-        data: jobId ? { ...data, _id: jobId } : data,
+        data: jobId ? { ...data, _id: jobId,enterprise:userId } : data,
         authToken: authToken,
         headers: {
           "Content-Type": "application/json",
@@ -455,15 +459,16 @@ const Jobs = () => {
       )}
       {isPosting ? (
         <PostJobs
-          onClose={handleIsPosting}
-          onSubmit={postJob}
-          job={selectedJob}
-        />
+        onClose={handleIsPosting}
+        postJob={postJob}
+        job={selectedJob}
+      />
+      
       ) : (
         <>
-          <div className="">
-            <div className="">
-              <h1 className="">
+          <div className="jobs">
+            <div className="jobs-table">
+              <h1 className="h2-style">
                 {applicantsPage ? (
                   <span>
                     <CustomIcon

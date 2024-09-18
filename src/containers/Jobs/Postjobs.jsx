@@ -1,3 +1,4 @@
+
 import React, { useEffect, useState } from "react";
 import CustomRewardInput from "../../components/CustomRewardInput/CustomRewardInput";
 import {
@@ -11,6 +12,7 @@ import {
 export default function PostJobs({ postJob, job = null }) {
   const [formData, setFormData] = useState({
     role: "",
+    OpenedFor:"",
     industry: "",
     vacancies: "",
     workDays: "",
@@ -147,6 +149,20 @@ export default function PostJobs({ postJob, job = null }) {
               >
                 <MenuItem value={"Contractual"}>Contractual</MenuItem>
                 <MenuItem value={"Permanent"}>Permanent</MenuItem>
+              </Select>
+            </FormControl>
+            <FormControl fullWidth className="dropdown">
+              <InputLabel id="demo-simple-select-label">Opened For</InputLabel>
+              <Select
+                labelId="demo-simple-select-label"
+                id="demo-simple-select"
+                value={formData.OpenedFor}
+                label="Select Type"
+                name="type"
+                onChange={handleChange}
+              >
+                <MenuItem value={"Contractual"}>Public</MenuItem>
+                <MenuItem value={"Permanent"}>Internal Opening</MenuItem>
               </Select>
             </FormControl>
             <FormControl fullWidth className="dropdown">

@@ -8,7 +8,7 @@ import { apiHandler } from "../../apis/index";
 import { endpoint } from "../../apis/endpoint";
 
 const SectionPermission = () => {
-    const location = useLocation();
+  const location = useLocation();
   const authToken = useSelector((state) => state.auth.authToken);
   const [checkedValues, setCheckedValues] = useState([]);
   const [loading, setLoading] = useState(false);
@@ -23,11 +23,11 @@ const SectionPermission = () => {
   const AddPermissions = async () => {
     setLoading(true);
     try {
-        console.log("ID from location.state:", id);
+      console.log("ID from location.state:", id);
 
       const response = await apiHandler({
         url: `${endpoint.SECTION_PERMISSIONS}/${id}`,
-                method: "POST",
+        method: "POST",
         headers: {
           "Content-Type": "application/json",
           Authorization: `Bearer ${authToken}`,
@@ -58,29 +58,39 @@ const SectionPermission = () => {
   ];
 
   return (
-    <div className="min-h-screen bg-gray-100 p-6 flex flex-col items-center">
+    <div className="min-h-screen flex flex-col items-center  ">
       <Header title="Section-Permissions" icon="" />
-      <div className="bg-white shadow-lg rounded-lg p-8 w-full max-w-lg">
-        <Checkbox.Group
-          style={{ width: '100%' }}
-          onChange={onChange}
-        >
-          <div className="flex flex-col space-y-4 mt-1">
-            {permissionOptions.map((option) => (
-              <Checkbox key={option} value={option}>{option}</Checkbox>
-            ))}
-          </div>
-        </Checkbox.Group>
+      <div className="bg-white shadow-lg rounded-lg p-8 m-8 w-full max-w-lg">
+        <div className="mb-6">
+          <Checkbox.Group
+            style={{ width: '100%' }}
+            onChange={onChange}
+          >
+            <div className="flex flex-col space-y-4">
+              {permissionOptions.map((option) => (
+                <Checkbox
+                  key={option}
+                  value={option}
+                  className="text-lg"
+                >
+                  <span className="ml-2">{option}</span>
+                </Checkbox>
+              ))}
+            </div>
+          </Checkbox.Group>
+        </div>
+        <div className="flex justify-center">
+          <Button 
+            type="primary" 
+            onClick={AddPermissions} 
+            loading={loading}
+            disabled={checkedValues.length === 0}
+            className="px-8"
+          >
+            Submit Permissions
+          </Button>
+        </div>
       </div>
-      <Button 
-        type="primary" 
-        onClick={AddPermissions} 
-        loading={loading}
-        className="mt-4"
-        disabled={checkedValues.length === 0}
-      >
-        Submit Permissions
-      </Button>
     </div>
   );
 };
