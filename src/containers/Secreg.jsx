@@ -113,15 +113,7 @@ const Secreg = () => {
                             className="w-full px-4 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
                         />
                     
-                        <label className="block text-gray-700">GSTIN</label>
-                        <input
-                            type="text"
-                            value={gstin}
-                            onChange={(e) => setGstin(e.target.value)}
-                            placeholder="Enter your GSTIN"
-                            className="w-full px-4 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-                        />
-                    </div>
+                    
                     <div className="mb-4">
                         <label className="block text-gray-700">Organization Name</label>
                         <input
@@ -160,9 +152,23 @@ const Secreg = () => {
                             onChange={(e) => setRevenue(e.target.value)}
                             className="w-full px-4 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
                         >
-                            <option value="<20LPA">Less than 20 LPA</option>
-                            <option value=">20LPA">More than 20 LPA</option>
+                            <option value="<20">Less than 20 LPA</option>
+<option value="20-1cr">20 - 1 Cr</option>
+<option value="1cr-10cr">1 Cr - 10 Cr</option>
+<option value="10cr-250cr">10 Cr - 250 Cr</option>
+<option value="250cr-1000cr">250 Cr - 1000 Cr</option>
+<option value="1000cr+">More than 1000 Cr</option>
+
                         </select>
+                    </div>
+                    <label className="block text-gray-700">GSTIN</label>
+                        <input
+                            type="text"
+                            value={gstin}
+                            onChange={(e) => setGstin(e.target.value)}
+                            placeholder="Enter your GSTIN"
+                            className="w-full px-4 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                        />
                     </div>
                     <button
                         type="submit"
