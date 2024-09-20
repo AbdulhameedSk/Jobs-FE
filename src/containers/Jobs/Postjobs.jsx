@@ -161,8 +161,8 @@ export default function PostJobs({ postJob, job = null }) {
                 name="type"
                 onChange={handleChange}
               >
-                <MenuItem value={"Contractual"}>Public</MenuItem>
-                <MenuItem value={"Permanent"}>Internal Opening</MenuItem>
+                <MenuItem value={"Public"}>Public</MenuItem>
+                <MenuItem value={"Internal Opening"}>Internal Opening</MenuItem>
               </Select>
             </FormControl>
             <FormControl fullWidth className="dropdown">

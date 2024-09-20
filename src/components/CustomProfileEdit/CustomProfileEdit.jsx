@@ -3,6 +3,9 @@ import "../../components/CustomProfileEdit/CustomProfileEdit.css";
 import { useDispatch } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import ChangePassword from "../ChangePassword/ChangePassword.jsx";
+import { endpoint } from "../../apis/endpoint";
+import { apiHandler } from "../../apis/index";
+import { useSelector } from "react-redux";
 
 const CustomProfileEdit = ({ setProFlage }) => {
   const dispatch = useDispatch();
@@ -14,12 +17,29 @@ const CustomProfileEdit = ({ setProFlage }) => {
   const handleProFlage = () => {
     setProFlage(false);
   };
+  const authToken = useSelector((state) => state.auth.authToken);
+  const handleLogout = async () => {
+    try {
+      const response = await apiHandler({
+        url: endpoint.SIGNOUTALL,
+        method: 'POST',
+        authToken,
+        headers: {
+          Authorization: `Bearer ${authToken}`,
+        },
+      });
 
-  const handleLogout = () => {
-    navigate("/login");
-    handleProFlage();
+      if (response.status === 200) {
+        console.log("Successfully signed out from all sessions.");
+        navigate("/login");
+        handleProFlage();
+      } else {
+        console.error("Error logging out: ", response.data.message);
+      }
+    } catch (error) {
+      console.error("An error occurred during logout: ", error);
+    }
   };
-
   const handleClickOutside = (event) => {
     if (
       wrapperRef.current &&
