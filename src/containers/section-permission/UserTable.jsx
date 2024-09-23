@@ -4,7 +4,7 @@ import { useSelector } from "react-redux";
 import { toast } from "react-hot-toast";
 import { FaUserTie } from "react-icons/fa";
 import Header from "../../components/Boilers/Header";
-import CustomTableV2 from "../../components/CustomTable/CustomTableV2";
+import CustomTable from "../../components/CustomTable/CustomTable";
 import { endpoint } from "../../apis/endpoint";
 import { apiHandler } from "../../apis";
 
@@ -17,7 +17,7 @@ const UserTable = () => {
   const [searchInput, setSearchInput] = useState("");
   const [filterApplied, setFiltersApplied] = useState(false);
   const [rows, setRows] = useState([]);
-  const { id } = location.state || {};
+  const userId = useSelector(state => state.user.userId);
 
   const headers = [
     "_id",
@@ -62,7 +62,7 @@ const UserTable = () => {
           "Content-Type": "application/json",
         },
         data: {
-          Eid: id
+          Eid: userId
         }
       });
 
@@ -120,7 +120,7 @@ const UserTable = () => {
       />
       <div className="jobs users ">
         <div className="user-table">
-          <CustomTableV2
+          <CustomTable
             ref={tableRef}
             headers={headers}
             rows={rows}

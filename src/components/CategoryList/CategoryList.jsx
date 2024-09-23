@@ -78,27 +78,45 @@ export default function CategoryList({
         category.name,
         category.description,
         category.thanksdescription,
-        <div className="icons-options" key={category._id}>
-          <div
-            className="icon1"
-            onClick={() => handleEditCategoryButton(category._id)}
-          >
-            <CustomIcon name="MdEdit" tag="Edit Category" />
+        true && (
+          <div className="icons-options">
+            <div
+              className="icon1"
+              onClick={() => handleEditCategoryButton(category._id)}
+            >
+              <CustomIcon name="MdEdit" tag="Edit Category" />
+            </div>
+            {category.status === true ? (
+              <div
+                className="icon3"
+                onClick={() => {
+                  updateCategoryStatus(category._id, false);
+                }}
+              >
+                <CustomIcon name="IoIosPause" tag="Unpublish Category" />
+              </div>
+            ) : (
+              <div
+                className="icon4"
+                onClick={() => {
+                  updateCategoryStatus(category._id, true);
+                }}
+              >
+                <CustomIcon name="IoIosPlay" tag="Publish Category" />
+              </div>
+            )}
+            <div
+              className="icon2"
+              onClick={() => openCustomAlert(category._id)}
+            >
+              <CustomIcon name="MdDelete" tag="Delete Category" />
+            </div>
           </div>
-          <div className="icon3" onClick={() => {}}>
-            <CustomIcon name="IoIosPlay" tag="Unpublish Category" />
-          </div>
-          <div
-            className="icon2"
-            onClick={() => openCustomAlert(category._id)}
-          >
-            <CustomIcon name="MdDelete" tag="Delete Category" />
-          </div>
-        </div>,
+        ),
       ]);
       setRows(rows);
     }
-  }, [categories]);
+  }, [categories, true]);
 
   return (
     <div className="ListCategory">

@@ -185,7 +185,7 @@ const SideBarMenu = () => {
         )}
         {(
           <div
-          onClick={() => handleItemClick("sectionpermission")}
+          onClick={() => handleItemClick("usertable")}
           style={{
             backgroundColor:
               selectedItem === "sectionpermission" ? "lightblue" : "transparent",
