@@ -114,7 +114,7 @@ const Secreg = () => {
 
     return (
         <div className="flex items-center justify-center min-h-screen bg-gray-100 px-4">
-            <div className="bg-white shadow-lg rounded-lg p-8 w-full max-w-lg">
+            <div className="bg-white shadow-lg rounded-lg p-8 m-8 w-full max-w-lg">
                 <form onSubmit={handleSubmit}>
                     {step === 1 && (
                         <>
