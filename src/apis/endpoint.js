@@ -92,5 +92,6 @@ export const endpoint = {
   ENTERPRISE_EMPLOYEES:"api/enterprise/EnterpriseEmployees",
   SIGNOUTALL:"api/enterprise/signout-all",
   CATEGORY_DETAILS:"api/enterprise/getCategoriesData",
+  MONTHLY_COUNT:"api/video/monthly-video-counts",
   };
   

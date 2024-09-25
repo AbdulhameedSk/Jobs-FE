@@ -25,6 +25,62 @@ const chartConfig = {
 
 
 export default function Dashboard() {
+  const ChartTooltipContent = ({ active, payload, label }) => {
+    if (active && payload && payload.length) {
+      return (
+        <div className="bg-background p-2 border border-border rounded shadow-md">
+          <p className="font-semibold">{label}</p>
+          <p>Uploads: {payload[0].value}</p>
+        </div>
+      );
+    }
+    return null;
+  };
+  const chartConfig = {
+    colors: {
+      chart1: 'hsl(var(--chart-1))',
+    },
+  };
+  const formatChartData = (monthlyUploadCounts) => {
+    if (!monthlyUploadCounts || monthlyUploadCounts.length === 0) {
+      return [];
+    }
+    return monthlyUploadCounts.map(({ _id: { year, month }, count }) => {
+      const formattedMonth = new Date(year, month - 1).toLocaleString('default', { month: 'short' }); 
+      return { name: `${formattedMonth} ${year}`, uploads: count };
+    });
+  };
+  const [chartData, setChartData] = useState([]);
+  const [isLoading, setIsLoading] = useState(true);
+  const [error, setError] = useState(null);
+
+  useEffect(() => {
+    fetchData();
+  }, []);
+  const fetchData = async () => {
+    try {
+      setIsLoading(true);
+      const response = await apiHandler({
+        url: endpoint.MONTHLY_COUNT,
+        method: 'GET',
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: `Bearer ${authToken}`,
+        },
+      });
+  
+      if (response.status === 200) {
+        const { monthlyUploadCounts } = response.data;
+        const formattedData = formatChartData(monthlyUploadCounts);
+        setChartData(formattedData);
+      }
+    } catch (err) {
+      console.error('Error fetching data:', err);
+      setError('Failed to load data. Please try again later.');
+    } finally {
+      setIsLoading(false);
+    }
+  };
   const authToken = useSelector((state) => state.auth.authToken);
   const userId = useSelector((state) => state.user.userId);
 
@@ -154,27 +210,30 @@ export default function Dashboard() {
               </ChartContainer>
             </CardContent>
           </Card>
+          <Card className="p-4 shadow-lg">
+        <CardHeader>
+          <CardTitle>Video Upload Trend</CardTitle>
+          <CardDescription>Monthly upload counts over the past year</CardDescription>
+        </CardHeader>
+        <CardContent>
+          {chartData.length > 0 ? (
+            <ResponsiveContainer width="100%" height={300}>
+              <LineChart data={chartData}>
+                <CartesianGrid strokeDasharray="3 3" />
+                <XAxis dataKey="name" />
+                <YAxis />
+                <Tooltip content={<ChartTooltipContent />} />
+                <Line type="monotone" dataKey="uploads" stroke={chartConfig.colors.chart1} />
+              </LineChart>
+            </ResponsiveContainer>
+          ) : (
+            <div className="flex items-center justify-center h-[300px] text-gray-500">
+              No upload data available for the past year.
+            </div>
+          )}
+        </CardContent>
+      </Card>
 
-          <Card>
-            <CardHeader>
-              <CardTitle>Line Chart</CardTitle>
-              <CardDescription>Performance Over Time</CardDescription>
-            </CardHeader>
-            <CardContent>
-              <ChartContainer config={chartConfig}>
-                <ResponsiveContainer width="100%" height={300}>
-                  <LineChart data={composedData}>
-                    <CartesianGrid strokeDasharray="3 3" />
-                    <XAxis dataKey="name" />
-                    <YAxis />
-                    <Tooltip content={<ChartTooltipContent />} />
-                    <Line type="monotone" dataKey="uv" stroke="hsl(var(--chart-1))" />
-                    <Line type="monotone" dataKey="pv" stroke="hsl(var(--chart-2))" />
-                  </LineChart>
-                </ResponsiveContainer>
-              </ChartContainer>
-            </CardContent>
-          </Card>
         </div>
 
         <Card>
