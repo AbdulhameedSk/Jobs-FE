@@ -179,7 +179,7 @@ const Jobs = () => {
         const jobs = response.data.data.jobs;
         setHeaders([
           "Role",
-          "OpenedFor",
+          "Vacancy Type",
           "Industry",
           "City",
           "State",

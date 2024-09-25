@@ -91,5 +91,6 @@ export const endpoint = {
   ENTERPRISE_ADMINS:"api/enterprise/all-users",
   ENTERPRISE_EMPLOYEES:"api/enterprise/EnterpriseEmployees",
   SIGNOUTALL:"api/enterprise/signout-all",
+  CATEGORY_DETAILS:"api/enterprise/getCategoriesData",
   };
   

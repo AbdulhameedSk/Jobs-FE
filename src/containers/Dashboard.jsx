@@ -1,120 +1,192 @@
-import * as React from 'react';
-import { BarChart } from '@mui/x-charts/BarChart';
-import Header from '../components/Boilers/Header';
-import SideBarMenu from '../components/Boilers/SideBarMenu';
-import { AreaChart, Area, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer } from 'recharts';
-import { PieChart, Pie, Legend } from 'recharts';
-import { ComposedChart, Line, Bar } from 'recharts';
+import React, { useEffect, useState } from 'react';
+import { TrendingUp } from "lucide-react";
+import { Bar, BarChart, CartesianGrid, XAxis, YAxis, Tooltip, ResponsiveContainer, PieChart, Pie, Line, LineChart } from 'recharts';
+import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
+import { ChartContainer, ChartTooltipContent } from "@/components/ui/chart";
+import Header from "../components/Boilers/Header";
+import { endpoint } from "../apis/endpoint";
+import { apiHandler } from "../apis/index";
+import { useSelector } from "react-redux";
 
-// Sample data for the AreaChart and ComposedChart
-const areaData = [
-  { name: 'Page A', uv: 4000, pv: 2400, amt: 2400 },
-  { name: 'Page B', uv: 3000, pv: 1398, amt: 2210 },
-  { name: 'Page C', uv: 2000, pv: 9800, amt: 2290 },
-  { name: 'Page D', uv: 2780, pv: 3908, amt: 2000 },
-  { name: 'Page E', uv: 1890, pv: 4800, amt: 2181 },
-  { name: 'Page F', uv: 2390, pv: 3800, amt: 2500 },
-  { name: 'Page G', uv: 3490, pv: 4300, amt: 2100 },
-];
+const chartConfig = {
+  uv: {
+    label: "UV",
+    color: "hsl(var(--chart-1))",
+  },
+  pv: {
+    label: "PV",
+    color: "hsl(var(--chart-2))",
+  },
+  amt: {
+    label: "Amount",
+    color: "hsl(var(--chart-3))",
+  },
+};
 
-const pieData01 = [
-  { name: 'Group A', value: 400 },
-  { name: 'Group B', value: 300 },
-  { name: 'Group C', value: 300 },
-  { name: 'Group D', value: 200 },
-  { name: 'Group E', value: 278 },
-  { name: 'Group F', value: 189 },
-];
 
-const pieData02 = [
-  { name: 'Group A', value: 2400 },
-  { name: 'Group B', value: 4567 },
-  { name: 'Group C', value: 1398 },
-  { name: 'Group D', value: 9800 },
-  { name: 'Group E', value: 3908 },
-  { name: 'Group F', value: 4800 },
-];
+export default function Dashboard() {
+  const authToken = useSelector((state) => state.auth.authToken);
+  const userId = useSelector((state) => state.user.userId);
 
-const composedData = [
-  { name: 'Page A', uv: 590, pv: 800, amt: 1400 },
-  { name: 'Page B', uv: 868, pv: 967, amt: 1506 },
-  { name: 'Page C', uv: 1397, pv: 1098, amt: 989 },
-  { name: 'Page D', uv: 1480, pv: 1200, amt: 1228 },
-  { name: 'Page E', uv: 1520, pv: 1108, amt: 1100 },
-  { name: 'Page F', uv: 1400, pv: 680, amt: 1700 },
-];
+  const [freeCount, setFreeCount] = useState(0);
+  const [paidCount, setPaidCount] = useState(0);
+  const [employeeCount, setEmployeeCount] = useState(0);
 
-export default function ChartsOverviewDemo() {
+  const fetchCategoriesData = async () => {
+    try {
+      const response = await apiHandler({
+        url: endpoint.CATEGORY_DETAILS,
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${authToken}`, // Make sure authToken is defined
+        },
+        data: { userId:userId },
+      });
+      if (response.status === 200) {
+        setFreeCount(response.data.freeCount);
+        setPaidCount(response.data.paidCount);
+        setEmployeeCount(response.data.employeesCount);
+      }
+    } catch (error) {
+      console.error("Error fetching categories data:", error);
+    }
+  };
+
+  useEffect(() => {
+    console.log(`Free: ${freeCount}, Paid: ${paidCount}, Employees: ${employeeCount}`);
+    fetchCategoriesData();
+    console.log(`Free: ${freeCount}, Paid: ${paidCount}, Employees: ${employeeCount}`);
+
+  }, [freeCount, paidCount, employeeCount]);
+  
+
+  const pieData = [
+    { name: 'Free to Public', value: freeCount, fill: '#8884d8' }, // Purple
+    { name: 'Enterprise', value: employeeCount, fill: '#82ca9d' }, // Green
+    { name: 'Paid', value: paidCount, fill: '#ffc658' }, // Yellow
+  ];
+  
+
+  const areaData = [
+    { name: 'Page A', uv: 40, pv: 24, amt: 24 },
+    { name: 'Page B', uv: 30, pv: 14, amt: 22 },
+    { name: 'Page C', uv: 20, pv: 10, amt: 23 },
+    { name: 'Page D', uv: 28, pv: 39, amt: 20 },
+    { name: 'Page E', uv: 19, pv: 48, amt: 22 },
+    { name: 'Page F', uv: 24, pv: 38, amt: 25 },
+    { name: 'Page G', uv: 35, pv: 43, amt: 21 },
+  ];
+
+  const composedData = [
+    { name: 'Page A', uv: 590, pv: 800, amt: 1400 },
+    { name: 'Page B', uv: 868, pv: 967, amt: 1506 },
+    { name: 'Page C', uv: 1397, pv: 1098, amt: 989 },
+    { name: 'Page D', uv: 1480, pv: 1200, amt: 1228 },
+    { name: 'Page E', uv: 1520, pv: 1108, amt: 1100 },
+    { name: 'Page F', uv: 1400, pv: 680, amt: 1700 },
+  ];
+
   return (
-    <div className="flex">
+    <div className="flex flex-col space-y-4">
+      <div className="sticky top-0 z-10 bg-white">
+        <Header title={"Dashboard"} />
+      </div>
+      <div className="flex-grow">
+        <Card>
+          <CardHeader>
+            <CardTitle>Main Chart</CardTitle>
+            <CardDescription>Categories Data Overview</CardDescription>
+          </CardHeader>
+          <CardContent>
+            <ChartContainer config={chartConfig}>
+              <ResponsiveContainer width="100%" height={300}>
+                <BarChart data={areaData}>
+                  <CartesianGrid strokeDasharray="3 3" />
+                  <XAxis dataKey="name" />
+                  <YAxis domain={[0, 50]} />
+                  <Tooltip content={<ChartTooltipContent />} />
+                  <Bar dataKey="uv" fill="hsl(var(--chart-1))" />
+                  <Bar dataKey="pv" fill="hsl(var(--chart-2))" />
+                  <Bar dataKey="amt" fill="hsl(var(--chart-3))" />
+                </BarChart>
+              </ResponsiveContainer>
+            </ChartContainer>
+          </CardContent>
+        </Card>
 
-      <div className="flex-1">
-        <Header title="Dashboard" icon="" onClickFunc={null} />
-        
-        {/* Main BarChart */}
-        <div className="mt-6">
-          <BarChart
-            series={[
-              { data: [35, 44, 24, 34] },
-              { data: [51, 6, 49, 30] },
-              { data: [15, 25, 30, 50] },
-              { data: [60, 50, 15, 25] },
-            ]}
-            height={290}
-            xAxis={[{ data: ['Q1', 'Q2', 'Q3', 'Q4'], scaleType: 'band' }]}
-            margin={{ top: 10, bottom: 30, left: 40, right: 10 }}
-          />
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+          <Card>
+            <CardHeader>
+              <CardTitle>Categories Chart</CardTitle>
+              <CardDescription>Data Trends</CardDescription>
+            </CardHeader>
+            <CardContent>
+              <ChartContainer config={chartConfig}>
+                <ResponsiveContainer width="100%" height={300}>
+                  <BarChart data={areaData}>
+                    <CartesianGrid strokeDasharray="3 3" />
+                    <XAxis dataKey="name" />
+                    <YAxis />
+                    <Tooltip content={<ChartTooltipContent />} />
+                    <Bar dataKey="uv" stackId="1" fill="hsl(var(--chart-1))" />
+                    <Bar dataKey="pv" stackId="1" fill="hsl(var(--chart-2))" />
+                    <Bar dataKey="amt" stackId="1" fill="hsl(var(--chart-3))" />
+                  </BarChart>
+                </ResponsiveContainer>
+              </ChartContainer>
+            </CardContent>
+          </Card>
+
+          <Card>
+            <CardHeader>
+              <CardTitle>Pie Chart</CardTitle>
+              <CardDescription>Data Distribution</CardDescription>
+            </CardHeader>
+            <CardContent>
+              <ChartContainer config={chartConfig}>
+                <ResponsiveContainer width="100%" height={300}>
+                  <PieChart>
+                    <Pie dataKey="value" data={pieData} cx="50%" cy="50%" outerRadius={80} fill="hsl(var(--chart-1))" label />
+                    <Tooltip content={<ChartTooltipContent />} />
+                  </PieChart>
+                </ResponsiveContainer>
+              </ChartContainer>
+            </CardContent>
+          </Card>
+
+          <Card>
+            <CardHeader>
+              <CardTitle>Line Chart</CardTitle>
+              <CardDescription>Performance Over Time</CardDescription>
+            </CardHeader>
+            <CardContent>
+              <ChartContainer config={chartConfig}>
+                <ResponsiveContainer width="100%" height={300}>
+                  <LineChart data={composedData}>
+                    <CartesianGrid strokeDasharray="3 3" />
+                    <XAxis dataKey="name" />
+                    <YAxis />
+                    <Tooltip content={<ChartTooltipContent />} />
+                    <Line type="monotone" dataKey="uv" stroke="hsl(var(--chart-1))" />
+                    <Line type="monotone" dataKey="pv" stroke="hsl(var(--chart-2))" />
+                  </LineChart>
+                </ResponsiveContainer>
+              </ChartContainer>
+            </CardContent>
+          </Card>
         </div>
 
-        {/* Additional Charts in Flex Row */}
-        <div className="mt-6 flex flex-wrap space-x-4">
-          {/* Area Chart */}
-          <div className="flex-1">
-            <ResponsiveContainer width="100%" height={300}>
-              <AreaChart
-                data={areaData}
-                margin={{ top: 10, right: 30, left: 0, bottom: 0 }}
-              >
-                <CartesianGrid strokeDasharray="3 3" />
-                <XAxis dataKey="name" />
-                <YAxis />
-                <Tooltip />
-                <Area type="monotone" dataKey="uv" stackId="1" stroke="#8884d8" fill="#8884d8" />
-                <Area type="monotone" dataKey="pv" stackId="1" stroke="#82ca9d" fill="#82ca9d" />
-                <Area type="monotone" dataKey="amt" stackId="1" stroke="#ffc658" fill="#ffc658" />
-              </AreaChart>
-            </ResponsiveContainer>
-          </div>
-
-          {/* Pie Chart */}
-          <div className="flex-1">
-            <ResponsiveContainer width="100%" height={300}>
-              <PieChart>
-                <Pie dataKey="value" isAnimationActive={false} data={pieData01} cx="50%" cy="50%" outerRadius={80} fill="#8884d8" label />
-                <Pie dataKey="value" data={pieData02} cx={500} cy={200} innerRadius={40} outerRadius={80} fill="#82ca9d" />
-                <Tooltip />
-              </PieChart>
-            </ResponsiveContainer>
-          </div>
-
-          {/* Composed Chart */}
-          <div className="flex-1">
-            <ResponsiveContainer width="100%" height={300}>
-              <ComposedChart
-                data={composedData}
-                margin={{ top: 20, right: 20, bottom: 20, left: 20 }}
-              >
-                <CartesianGrid stroke="#f5f5f5" />
-                <XAxis dataKey="name" scale="band" />
-                <YAxis />
-                <Tooltip />
-                <Legend />
-                <Bar dataKey="uv" barSize={20} fill="#413ea0" />
-                <Line type="monotone" dataKey="uv" stroke="#ff7300" />
-              </ComposedChart>
-            </ResponsiveContainer>
-          </div>
-        </div>
+        <Card>
+          <CardFooter className="flex-col gap-2 text-sm">
+            <div className="flex items-center gap-2 font-medium leading-none">
+              Trending up by 5.2% this month <TrendingUp className="h-4 w-4" />
+            </div>
+            <div className="leading-none text-muted-foreground">
+              Showing total data
+            </div>
+          </CardFooter>
+        </Card>
       </div>
     </div>
   );

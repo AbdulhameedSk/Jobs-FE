@@ -52,7 +52,7 @@ const SectionPermission = () => {
     "Skill Yatra Enterprise",
     "Skill Yatra Paid",
     "Public Jobs - Applied Jobs",
-    "Internal Openings",
+    "Internal Jobs",
     "Rewards",
     "Partners"
   ];
