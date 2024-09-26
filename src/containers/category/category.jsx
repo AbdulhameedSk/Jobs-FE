@@ -56,6 +56,11 @@ const Category = () => {
   const [thanksDescFilter, setThanksDescFilter] = useState([null, 0]);
   const [filterThanksDesc, setFilterThanksDesc] = useState("");
   const [isThanksDescFilter, setIsThanksDescFilter] = useState(false);
+
+  const [addreqFilter, setaddreqFilter] = useState([null, 0]);
+  const [filterThanksreqDesc, setFilterThanksreqDesc] = useState("");
+  const [isThanksDescreqFilter, setIsThanksDescreqFilter] = useState(false);
+
   const [kinds, setKinds] = useState([]);
   const [selectedKind, setSelectedKind] = useState("");
   const getKind = async (kind) => {
@@ -102,6 +107,11 @@ const Category = () => {
     () => {
       setFilterType("text");
       setFilterText("Thanks Description");
+      setFilterModal(true);
+    },
+    ()=>{
+      setFilterType("text");
+      setFilterText("add_request_enterprise");
       setFilterModal(true);
     },
     null,
@@ -236,19 +246,19 @@ const Category = () => {
       });
       if (response.status === 200) {
         if (isEdit) {
-          toast.success("Category updated successfully");
+          toast.success("Category Permission sent successfully");
           setIsEditCategory(false);
           getCategories("edit");
         } else {
-          toast.success("Category uploaded successfully");
+          toast.success("Category Permission sent successfully");
           setIsEditCategory(false);
           getCategories("save");
         }
       } else {
-        toast.error("Failed to upload category");
+        toast.error("Failed to send permission for category");
       }
     } catch {
-      toast.error("Failed to upload category");
+      toast.error("Failed to send permission for category");
     } finally {
       setIsLoading(false); // Set isLoading back to false after the API call
     }

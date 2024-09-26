@@ -15,6 +15,7 @@ import Section from "./containers/section-permission/Section";
 import 'bootstrap/dist/css/bootstrap.min.css';
 import UserTable from "./containers/section-permission/UserTable";
 import Index from "./containers/HomePage/Index";
+import ECategory from "./containers/category/ECategory";
 
 function App() {
   return (
@@ -40,6 +41,8 @@ function App() {
             <Route exact path="/spermissions" element={<SectionPermission />} />
             <Route exact path="/skillyatravideos" element={<SkillYatraVideos />} />
             <Route exact path="/usertable" element={<UserTable />} />
+            {/* <Route exact path="enterprise/category" element={<ECategory />} /> */}
+
             </Route>
           </Routes>
         </div>

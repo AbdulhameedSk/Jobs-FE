@@ -32,9 +32,9 @@ export default function CategoryList({
 
   const authToken = useSelector((state) => state.auth.authToken);
 
-  const headers = ["Name", "Description", "Thanks Description", "Actions"];
-  const filterTypes = ["text", "text", "text", ""];
-  const textAlign = ["left", "left", "left", ""];
+  const headers = ["Name", "Description", "Thanks Description", "Add Request","Delete Request", "Actions"];
+  const filterTypes = ["text", "text", "text", "text","text", ""];
+  const textAlign = ["left", "left", "left", "left","text", ""];
 
   const handleDelete = async (id) => {
     setIsLoading(true);
@@ -72,12 +72,40 @@ export default function CategoryList({
     setDeleteId(id);
   };
 
+  const updateCategoryStatus = async (id, status) => {
+    setIsLoading(true);
+    try {
+      const response = await fetch(`${endpoint.BASE_URL_STAGING}${endpoint.CATEGORY_UPDATE_STATUS}`, {
+        method: "PUT",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${authToken}`,
+        },
+        body: JSON.stringify({ _id: id, status: status }),
+      });
+
+      const data = await response.json();
+      if (response.status === 200) {
+        toast.success(`Category ${status ? 'published' : 'unpublished'} successfully`);
+        getCategories();
+      } else {
+        toast.error(`Failed to ${status ? 'publish' : 'unpublish'} category`);
+      }
+    } catch {
+      toast.error(`Failed to ${status ? 'publish' : 'unpublish'} category`);
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
   useEffect(() => {
     if (categories.length > 0) {
       const rows = categories.map((category) => [
         category.name,
         category.description,
         category.thanksdescription,
+        category.add_request_enterprise || 'Approved',
+        category.delete_request_enterprise || '',
         true && (
           <div className="icons-options">
             <div
