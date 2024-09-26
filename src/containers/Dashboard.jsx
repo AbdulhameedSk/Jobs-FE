@@ -7,6 +7,7 @@ import Header from "../components/Boilers/Header";
 import { endpoint } from "../apis/endpoint";
 import { apiHandler } from "../apis/index";
 import { useSelector } from "react-redux";
+import CustomChartBar from "../components/CustomChartBar/CustomChartBar";
 
 const chartConfig = {
   uv: {
@@ -25,17 +26,31 @@ const chartConfig = {
 
 
 export default function Dashboard() {
-  const ChartTooltipContent = ({ active, payload, label }) => {
+  // const ChartTooltipContent = ({ active, payload, label }) => {
+  //   if (active && payload && payload.length) {
+  //     return (
+  //       <div className="bg-background p-2 border border-border rounded shadow-md">
+  //         <p className="font-semibold">{label}</p>
+  //         <p>Uploads: {payload[0].value}</p>
+  //       </div>
+  //     );
+  //   }
+  //   return null;
+  // };
+
+  const ChartTooltipContent = ({ active, payload }) => {
     if (active && payload && payload.length) {
+      const name = payload[0].name === 'Free to Public' ? 'Free' : payload[0].name;
       return (
-        <div className="bg-background p-2 border border-border rounded shadow-md">
-          <p className="font-semibold">{label}</p>
-          <p>Uploads: {payload[0].value}</p>
+       <div className="bg-background p-2 border border-border rounded shadow-md flex ">
+          <p className="font-semibold">{name}</p>
+          <p>: {payload[0].value}</p>
         </div>
       );
     }
     return null;
   };
+  
   const chartConfig = {
     colors: {
       chart1: 'hsl(var(--chart-1))',
@@ -50,6 +65,27 @@ export default function Dashboard() {
       return { name: `${formattedMonth} ${year}`, uploads: count };
     });
   };
+const [chartJobData, setChartJobData] = useState([]);
+  const handleJobsList = async () => {
+    setIsLoading(true);
+    const result = await apiHandler({
+      url: endpoint.JOB_METRICS,
+      method: "GET",
+      authToken: authToken,
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${authToken}`,
+      },
+    });
+    if (result.status === 200) {
+      setChartJobData(result.data.data.last1yearjobs);
+      setIsLoading(false);
+    }
+  };
+useEffect(() => {
+
+  handleJobsList();
+}, []);
   const [chartData, setChartData] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState(null);
@@ -116,12 +152,12 @@ export default function Dashboard() {
 
   }, [freeCount, paidCount, employeeCount]);
   
-
   const pieData = [
-    { name: 'Free to Public', value: freeCount, fill: '#8884d8' }, // Purple
-    { name: 'Enterprise', value: employeeCount, fill: '#82ca9d' }, // Green
-    { name: 'Paid', value: paidCount, fill: '#ffc658' }, // Yellow
+    { name: 'Free to Public', value: freeCount ?? 0, fill: '#8884d8' }, // Purple
+    { name: 'Enterprise', value: employeeCount ?? 0, fill: '#82ca9d' }, // Green
+    { name: 'Paid', value: paidCount ?? 0, fill: '#ffc658' }, // Yellow
   ];
+  
   
 
   const areaData = [
@@ -149,27 +185,10 @@ export default function Dashboard() {
         <Header title={"Dashboard"} />
       </div>
       <div className="flex-grow">
-        <Card>
-          <CardHeader>
-            <CardTitle>Main Chart</CardTitle>
-            <CardDescription>Categories Data Overview</CardDescription>
-          </CardHeader>
-          <CardContent>
-            <ChartContainer config={chartConfig}>
-              <ResponsiveContainer width="100%" height={300}>
-                <BarChart data={areaData}>
-                  <CartesianGrid strokeDasharray="3 3" />
-                  <XAxis dataKey="name" />
-                  <YAxis domain={[0, 50]} />
-                  <Tooltip content={<ChartTooltipContent />} />
-                  <Bar dataKey="uv" fill="hsl(var(--chart-1))" />
-                  <Bar dataKey="pv" fill="hsl(var(--chart-2))" />
-                  <Bar dataKey="amt" fill="hsl(var(--chart-3))" />
-                </BarChart>
-              </ResponsiveContainer>
-            </ChartContainer>
-          </CardContent>
-        </Card>
+      
+
+<CustomChartBar videoDataBar={chartJobData} />
+
 
         <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
           <Card>

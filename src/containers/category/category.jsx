@@ -482,7 +482,7 @@ if(!isGSTCompleted){
    
             <option value="Free to Public" className="text-gray-500">Free to public</option>
             <option value="For Employees" className="text-gray-500">For Employees</option>
-            <option value="Paid Courses" className="text-gray-500">Paid Courses</option>
+            <option value="Paid Courses" className="text-gray-500">Paid For Public</option>
 
     </select>
   </div>
