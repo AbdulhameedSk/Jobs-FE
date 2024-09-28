@@ -8,6 +8,7 @@ import Spinner from "../../components/Spinner/Spinner";
 import CustomAlert from "../CustomAlert/CustomAlert.jsx";
 import CustomTableV2 from "../CustomTable/CustomTableV2.jsx";
 import Pagination from "../Pagination/Pagination.jsx";
+import { apiHandler } from "../../apis/index";
 
 export default function CategoryList({
   categories,
@@ -50,7 +51,9 @@ export default function CategoryList({
 
       const data = await response.json();
       if (response.status === 200) {
-        toast.success("Category deleted successfully");
+        setTimeout(() => {
+          toast.success("Category delete request sent successfully");
+        }, 1000);
         getCategories();
         window.location.reload(true);
       } else {
@@ -72,31 +75,36 @@ export default function CategoryList({
     setDeleteId(id);
   };
 
-  const updateCategoryStatus = async (id, status) => {
-    setIsLoading(true);
-    try {
-      const response = await fetch(`${endpoint.BASE_URL_STAGING}${endpoint.CATEGORY_UPDATE_STATUS}`, {
-        method: "PUT",
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${authToken}`,
-        },
-        body: JSON.stringify({ _id: id, status: status }),
-      });
-
-      const data = await response.json();
-      if (response.status === 200) {
-        toast.success(`Category ${status ? 'published' : 'unpublished'} successfully`);
-        getCategories();
-      } else {
-        toast.error(`Failed to ${status ? 'publish' : 'unpublish'} category`);
+    const updateCategoryStatus = async (id, status) => {
+      setIsLoading(true);
+      try {
+        console.log("Sending request to update category status...");
+        const response = await apiHandler({
+          url: endpoint.UPDATE_CATEGORY_STATUS,
+          method: "PUT",
+          data: {
+            _id: id,
+            status: status,
+          },
+          authToken: authToken,
+          headers: {
+            "Content-Type": "application/json",
+          },
+        });
+        console.log("Response received:", response);
+        if (response.status === 200) {
+          toast.success("Category status update sent for approval");
+          getCategories();
+        } else {
+          toast.error("Failed to update category status");
+        }
+      } catch (error) {
+        console.error("Error updating category status:", error);
+        toast.error("Failed to update category status");
+      } finally {
+        setIsLoading(false);
       }
-    } catch {
-      toast.error(`Failed to ${status ? 'publish' : 'unpublish'} category`);
-    } finally {
-      setIsLoading(false);
-    }
-  };
+    };
 
   useEffect(() => {
     if (categories.length > 0) {

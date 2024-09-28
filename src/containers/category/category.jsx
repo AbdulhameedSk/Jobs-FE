@@ -643,7 +643,7 @@ if(!isGSTCompleted){
               ? "Loading..."
               : category
               ? "Update Category"
-              : "Save Category"}
+              : "Send Category for Approval"}
           </button>
         </div>
       </>

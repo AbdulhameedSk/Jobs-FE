@@ -62,7 +62,11 @@ const CustomProfileEdit = ({ setProFlage }) => {
       document.removeEventListener("mousedown", handleClickOutside);
     };
   }, []);
-
+const navBank = () => {
+    navigate("/bank-details");
+    handleProFlage();
+  }
+  
   return (
     <div
       ref={wrapperRef}
@@ -76,6 +80,9 @@ const CustomProfileEdit = ({ setProFlage }) => {
           </div>
           <div className="profile-edit-text" onClick={handleLogout}>
             Logout
+          </div>
+          <div className="profile-edit-text" onClick={navBank}>
+            Bank Details
           </div>
         </div>
       </div>

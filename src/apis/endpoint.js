@@ -94,5 +94,8 @@ export const endpoint = {
   CATEGORY_DETAILS:"api/enterprise/getCategoriesData",
   MONTHLY_COUNT:"api/video/monthly-video-counts",
   JOB_METRICS:"api/enterprise/getJobMetrics",
+  BANK_DETAILS:"api/enterprise/BankDetails",
+  GET_BANK_DETAILS:"api/enterprise/BankDetails",
+  UPDATE_CATEGORY_STATUS: "api/category/updateCategoryStatus",
   };
   

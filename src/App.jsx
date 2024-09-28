@@ -16,7 +16,7 @@ import 'bootstrap/dist/css/bootstrap.min.css';
 import UserTable from "./containers/section-permission/UserTable";
 import Index from "./containers/HomePage/Index";
 import ECategory from "./containers/category/ECategory";
-
+import BankDetails from "./containers/BankDetails";
 function App() {
   return (
     <>
@@ -41,9 +41,10 @@ function App() {
             <Route exact path="/spermissions" element={<SectionPermission />} />
             <Route exact path="/skillyatravideos" element={<SkillYatraVideos />} />
             <Route exact path="/usertable" element={<UserTable />} />
-            {/* <Route exact path="enterprise/category" element={<ECategory />} /> */}
 
             </Route>
+            <Route exact path="/bank-details" element={<BankDetails />} />
+
           </Routes>
         </div>
       </BrowserRouter>
