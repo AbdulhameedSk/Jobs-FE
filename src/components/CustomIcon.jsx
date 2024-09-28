@@ -86,6 +86,7 @@ import {
     MdKeyboardDoubleArrowRight,
     MdLockOutline,
   } from "react-icons/md";
+  import { PiStudentFill } from "react-icons/pi";
   import {
     PiVideoFill,
     PiFactoryFill,
@@ -109,6 +110,7 @@ import {
   const iconsMap = {
     RiShieldUserFill,
     FaBuilding,
+    PiStudentFill,
     GoTasklist,
     RiUserAddFill,
     BsBarChartFill,

@@ -34,6 +34,30 @@ const SideBarMenu = () => {
       <div style={{ marginTop: "15px", padding: "0px 20px 0px 20px" }}>
       {(
           <div
+            onClick={() => handleItemClick("dashboard")}
+            style={{
+              backgroundColor:
+                selectedItem === "dashboard" ? "lightblue" : "transparent",
+              borderRadius: "5px",
+            }}
+            className="side-fixing-text-sd"
+          >
+            <div className="side-icon-dash">
+              <CustomIcon name={"MdDashboard"} />
+            </div>
+            <div
+              className="sideBar-text-dash"
+              style={{
+                color:
+                  selectedItem === "dashboard" ? "#1e81d2" : "rgb(144 132 132)",
+              }}
+            >
+              Dashboard
+            </div>
+          </div>
+        )}
+      {(
+          <div
             onClick={() => handleItemClick("Permissions")}
             style={{
               backgroundColor:
@@ -42,7 +66,9 @@ const SideBarMenu = () => {
             }}
             className="side-fixing-text-sd"
           >
-            
+            <div className="side-icon-dash">
+              <CustomIcon name={"PiStudentFill"} />
+            </div>
             <div
               className="sideBar-text-dash"
               style={{
@@ -75,30 +101,7 @@ const SideBarMenu = () => {
           </div>
         </div>
         )}
-        {(
-          <div
-            onClick={() => handleItemClick("dashboard")}
-            style={{
-              backgroundColor:
-                selectedItem === "dashboard" ? "lightblue" : "transparent",
-              borderRadius: "5px",
-            }}
-            className="side-fixing-text-sd"
-          >
-            <div className="side-icon-dash">
-              <CustomIcon name={"MdDashboard"} />
-            </div>
-            <div
-              className="sideBar-text-dash"
-              style={{
-                color:
-                  selectedItem === "dashboard" ? "#1e81d2" : "rgb(144 132 132)",
-              }}
-            >
-              Dashboard
-            </div>
-          </div>
-        )}
+      
 
         {
           <div className="side-skill-fix" onClick={() => toggleListSkill()}>

@@ -3,8 +3,7 @@ import CustomIcon from "../../components/CustomIcon.jsx";
 import PROFILE from "../../assets/ChauwkLogo/CHAUWK_SYMBOL_NIGHT.png";
 import { useNavigate } from 'react-router-dom';
 import CustomProfileEdit from "../CustomProfileEdit/CustomProfileEdit.jsx";
-import { CiLogout } from "react-icons/ci";
-// import Chanege from "../../components/Change.jsx";
+import { ImMenu3 } from "react-icons/im";// import Chanege from "../../components/Change.jsx";
 const Header = ({
   title,
   icon,
@@ -99,7 +98,7 @@ const navigate=useNavigate();
                 onClick={handleProFlage}
                 className="text-[#515b6f] font-bold py-2 px-3 rounded-full bg-[#ecf3ec66]"
               >
-                <CiLogout size='2rem' className="text-[#515b6f] font-bold  " />
+                <ImMenu3 size='2rem' className="text-[#515b6f] font-bold  " />
               </button>
             </div>
           </div>
