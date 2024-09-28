@@ -179,7 +179,8 @@ const Jobs = () => {
         const jobs = response.data.data.jobs;
         setHeaders([
           "Role",
-          "Vacancy Type",
+          "OpenedFor",
+          "Add Request",
           "Industry",
           "City",
           "State",
@@ -198,6 +199,7 @@ const Jobs = () => {
           "text",
           "text",
           "text",
+          "text",
           "range",
           "text",
           "range",
@@ -208,6 +210,7 @@ const Jobs = () => {
           "",
         ]);
         setTextAlign([
+          "left",
           "left",
           "left",
           "left",
@@ -224,6 +227,7 @@ const Jobs = () => {
         ]);
 
         setColumnsizes([
+          "200px",
           "200px",
           "200px",
           "200px",
@@ -254,7 +258,8 @@ const Jobs = () => {
 
           return [
             job.role,
-            job.OpenedFor,
+            job.type,
+            job.add_request,
             job.industry,
             job.city,
             job.state,

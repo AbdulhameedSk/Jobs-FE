@@ -1,46 +1,32 @@
 import React from "react";
-import { Modal } from "reactstrap";
+import { Modal, ModalHeader, ModalBody, ModalFooter, Button } from "reactstrap";
 import "./CustomAlert.css";
 
-export default function CustomAlert({
-  onClickFunction,
-  onCancelFunction,
-  message,
-  type,
+const CustomAlert = ({
   show,
-}) {
-  const handleOnClickFunction = () => {
-    onClickFunction();
-    onCancelFunction();
-  };
-
+  title,
+  description,
+  close,
+  submit
+}) => {
   return (
-    <div>
-      <Modal
-        backdrop={"static"}
-        isOpen={show}
-        toggle={onCancelFunction}
-        centered
-      >
+    <Modal isOpen={show} toggle={close} centered backdrop="static">
+      <ModalHeader toggle={close}>{title}</ModalHeader>
+      <ModalBody>
         <div className="custom-alert">
-          <div className="message">{message}</div>
-          <div className="btns">
-            <button onClick={onCancelFunction} className="button left">
-              Cancel
-            </button>
-            <button
-              onClick={handleOnClickFunction}
-              className={
-                type === "delete"
-                  ? "delete button right"
-                  : "button right confirm"
-              }
-            >
-              {type === "delete" ? "Delete" : "Confirm"}
-            </button>
-          </div>
+          <div className="message">{description}</div>
         </div>
-      </Modal>
-    </div>
+      </ModalBody>
+      <ModalFooter>
+        <Button color="secondary" onClick={close}>
+          Cancel
+        </Button>
+        <Button color="danger" onClick={submit}>
+          Delete
+        </Button>
+      </ModalFooter>
+    </Modal>
   );
-}
+};
+
+export default CustomAlert;

@@ -7,7 +7,13 @@ import {
   Select,
   Slider,
 } from "@mui/material";
-
+const handleChange = (event) => {
+  const { name, value } = event.target;
+  setFormData((prevData) => ({
+    ...prevData,
+    [name]: value,
+  }));
+};
 export default function PostJobs({ postJob, job = null }) {
   const [formData, setFormData] = useState({
     role: "",
@@ -19,7 +25,7 @@ export default function PostJobs({ postJob, job = null }) {
     jobTiming: "",
     benefits: "",
     jobDescription: "",
-    type: "",
+    type: "For Public",
     status: "",
     gender: "",
     experience: "",
@@ -105,21 +111,20 @@ export default function PostJobs({ postJob, job = null }) {
               event={true}
             /> */}
 
-
 <FormControl fullWidth className="dropdown">
-              <InputLabel id="type-label">Opened For</InputLabel>
-              <Select
-                labelId="type-label"
-                value={formData.type}
-                label="Opended For"
-                name="type"
-                onChange={handleChange}
-              >
-                <MenuItem value="For Public">For Public</MenuItem>
-                <MenuItem value="For Employees">For Employees</MenuItem>
-              </Select>
-            </FormControl>
-
+  <InputLabel id="type-label">Opened For</InputLabel>
+  <Select
+    labelId="type-label"
+    defaultValue="For Public"
+    value={formData.type}
+    label="Opened For"
+    name="type"
+    onChange={handleChange}
+  >
+    <MenuItem value="For Public">For Public</MenuItem>
+    <MenuItem value="For Employees">For Employees</MenuItem>
+  </Select>
+</FormControl>
             <CustomRewardInput
               iconName="PiFactoryFill"
               placeholder="Industry*"
