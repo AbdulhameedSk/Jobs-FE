@@ -90,6 +90,9 @@ const SideBarMenu = () => {
           }}
           className="side-fixing-text-sd"
         >
+           <div className="side-icon-dash">
+              <CustomIcon name={"GrUserSettings"} />
+            </div>
           <div
             className="sideBar-text-dash"
             style={{

@@ -50,12 +50,24 @@ export default function Dashboard() {
     }
     return null;
   };
-  
-  const chartConfig = {
-    colors: {
-      chart1: 'hsl(var(--chart-1))',
-    },
+  const BARChartTooltipContent = ({ active, payload, label }) => {
+    if (active && payload && payload.length) {
+      return (
+        <div className="bg-background p-2 border border-border rounded shadow-md">
+          <p className="font-semibold">{label}</p>
+          {payload.map((entry, index) => (
+            <p key={index}>{`${entry.name}: ${entry.value}`}</p>
+          ))}
+        </div>
+      );
+    }
+    return null;
   };
+  // const chartConfig = {
+  //   colors: {
+  //     chart1: 'hsl(var(--chart-1))',
+  //   },
+  // };
   const formatChartData = (monthlyUploadCounts) => {
     if (!monthlyUploadCounts || monthlyUploadCounts.length === 0) {
       return [];
@@ -203,7 +215,7 @@ useEffect(() => {
                     <CartesianGrid strokeDasharray="3 3" />
                     <XAxis dataKey="name" />
                     <YAxis />
-                    <Tooltip content={<ChartTooltipContent />} />
+                    <Tooltip content={<BARChartTooltipContent />} />
                     <Bar dataKey="uv" stackId="1" fill="hsl(var(--chart-1))" />
                     <Bar dataKey="pv" stackId="1" fill="hsl(var(--chart-2))" />
                     <Bar dataKey="amt" stackId="1" fill="hsl(var(--chart-3))" />

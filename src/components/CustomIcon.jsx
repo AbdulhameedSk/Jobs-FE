@@ -86,6 +86,8 @@ import {
     MdKeyboardDoubleArrowRight,
     MdLockOutline,
   } from "react-icons/md";
+  import { GrUserSettings } from "react-icons/gr";
+
   import { PiStudentFill } from "react-icons/pi";
   import {
     PiVideoFill,
@@ -178,6 +180,7 @@ import {
     LuBellDot,
     IoIosArrowUp,
     IoIosArrowDown,
+    GrUserSettings,
     BiSolidMessageRoundedDetail,
     TiGroup,
     FaPeopleArrows,

@@ -64,8 +64,10 @@ const CoursePermissions = () => {
   };
 
   useEffect(() => {
-    fetchCategoriesAndPermissions();
-  }, [id]); // Re-fetch if id changes
+    if (id) {
+      fetchCategoriesAndPermissions();
+    }
+  }, [id]);
 
   const handleCheckboxChange = (index) => {
     const newCheckboxes = [...checkboxes];
@@ -91,7 +93,7 @@ const CoursePermissions = () => {
 
       if (response.status === 200) {
         toast.success("Permissions updated successfully");
-        // Optionally, you can update the local state to reflect the changes
+        // Update local state to reflect the changes
         setCheckboxes(checkboxes.map(checkbox => ({
           ...checkbox,
           allow: updatedPermissions.includes(checkbox.id)
@@ -105,9 +107,13 @@ const CoursePermissions = () => {
     }
   };
   
+  if (!id) {
+    return <div>Error: No user ID provided</div>;
+  }
+
   return (
     <div>
-      <Header title={"Course Permissions"} />
+      <Header title="Course Permissions" />
       <div className="min-h-screen bg-gray-100 pt-2">
         <div className="max-w-4xl mx-auto">
           {isLoading ? (
