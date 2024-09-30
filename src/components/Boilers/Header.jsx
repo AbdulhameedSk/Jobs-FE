@@ -87,7 +87,7 @@ const navigate=useNavigate();
             )}
             <div>
               <img
-                onClick={() => SecReg()}
+                onClick={()=>{}}
                 src={PROFILE}
                 alt="employee"
                 className="w-12 h-12 rounded-full cursor-pointer"
@@ -101,6 +101,7 @@ const navigate=useNavigate();
                 <ImMenu3 size='2rem' className="text-[#515b6f] font-bold  " />
               </button>
             </div>
+            
           </div>
         </div>
         {proFlage && <CustomProfileEdit setProFlage={setProFlage} />}

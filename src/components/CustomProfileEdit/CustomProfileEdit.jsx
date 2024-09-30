@@ -66,7 +66,10 @@ const navBank = () => {
     navigate("/bank-details");
     handleProFlage();
   }
-  
+  const navPersonal = () => {
+    navigate("/SecReg");
+    handleProFlage();
+  }
   return (
     <div
       ref={wrapperRef}
@@ -75,14 +78,19 @@ const navBank = () => {
     >
       <div className="card" style={{ width: "12rem" }}>
         <div className="card-body">
+         
+         
+          <div className="profile-edit-text" onClick={navBank}>
+            Enterprise Profile
+          </div>
+          <div className="profile-edit-text" onClick={navBank}>
+            Bank Details
+          </div>
           <div className="profile-edit-text" onClick={handleOpenChangePassword}>
             Change password
           </div>
           <div className="profile-edit-text" onClick={handleLogout}>
             Logout
-          </div>
-          <div className="profile-edit-text" onClick={navBank}>
-            Bank Details
           </div>
         </div>
       </div>

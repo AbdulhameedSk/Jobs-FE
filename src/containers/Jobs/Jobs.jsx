@@ -180,7 +180,7 @@ const Jobs = () => {
         setHeaders([
           "Role",
           "OpenedFor",
-          "Add Request",
+          "Sublish Status",
           "Industry",
           "City",
           "State",
