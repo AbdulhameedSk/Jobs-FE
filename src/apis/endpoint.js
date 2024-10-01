@@ -97,5 +97,6 @@ export const endpoint = {
   BANK_DETAILS:"api/enterprise/BankDetails",
   GET_BANK_DETAILS:"api/enterprise/getBankDetails",
   UPDATE_CATEGORY_STATUS: "api/category/updateCategoryStatus",
+  SEVEN_JOBS:"api/job-portal/get7JobMetrics",
   };
   

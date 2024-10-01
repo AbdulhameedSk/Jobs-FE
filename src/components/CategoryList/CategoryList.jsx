@@ -177,8 +177,13 @@ export default function CategoryList({
       {showAlert && (
         <CustomAlert
           show={showAlert}
-          onClickFunction={() => handleDelete(deleteId)}
-          onCancelFunction={() => setShowAlert(false)}
+          title="Delete Category"
+          description="Are you sure you want to send request to delete this category?"
+          close={() => setShowAlert(false)}
+          submit={() => {
+            handleDelete(deleteId)  
+                      setShowAlert(false);
+          }}
           message="Are you sure you want to delete this category?"
           type="delete"
         />

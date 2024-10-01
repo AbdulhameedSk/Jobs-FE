@@ -7,26 +7,19 @@ import {
   Select,
   Slider,
 } from "@mui/material";
-const handleChange = (event) => {
-  const { name, value } = event.target;
-  setFormData((prevData) => ({
-    ...prevData,
-    [name]: value,
-  }));
-};
+
 export default function PostJobs({ postJob, job = null }) {
   const [formData, setFormData] = useState({
     role: "",
-    openedFor: "", 
-    add_request:"pending",
+    openedFor: "For Public",
+    status: "pending",
     industry: "",
     vacancies: "",
     workDays: "",
     jobTiming: "",
     benefits: "",
     jobDescription: "",
-    type: "For Public",
-    status: "",
+    type: "",
     gender: "",
     experience: "",
     education: "",
@@ -48,14 +41,18 @@ export default function PostJobs({ postJob, job = null }) {
   const [editID, setEditID] = useState("");
 
   const handleChange = (e) => {
-    setFormData({ ...formData, [e.target.name]: e.target.value });
+    const { name, value } = e.target;
+    setFormData((prevData) => ({
+      ...prevData,
+      [name]: value,
+    }));
   };
 
   const handleSalaryChange = () => {
-    setFormData({
-      ...formData,
+    setFormData((prevData) => ({
+      ...prevData,
       salary: `${minSalary} - ${maxSalary}`,
-    });
+    }));
   };
 
   useEffect(() => {
@@ -102,29 +99,19 @@ export default function PostJobs({ postJob, job = null }) {
               setValue={handleChange}
               event={true}
             />
-            {/* <CustomRewardInput
-              iconName="FaUsers"
-              placeholder="Opened For*"
-              value={formData.openedFor}
-              name="openedFor"
-              setValue={handleChange}
-              event={true}
-            /> */}
-
-<FormControl fullWidth className="dropdown">
-  <InputLabel id="type-label">Opened For</InputLabel>
-  <Select
-    labelId="type-label"
-    defaultValue="For Public"
-    value={formData.type}
-    label="Opened For"
-    name="type"
-    onChange={handleChange}
-  >
-    <MenuItem value="For Public">For Public</MenuItem>
-    <MenuItem value="For Employees">For Employees</MenuItem>
-  </Select>
-</FormControl>
+            <FormControl fullWidth className="dropdown">
+              <InputLabel id="openedFor-label">Opened For</InputLabel>
+              <Select
+                labelId="openedFor-label"
+                value={formData.openedFor}
+                label="Opened For"
+                name="openedFor"
+                onChange={handleChange}
+              >
+                <MenuItem value="For Public">For Public</MenuItem>
+                <MenuItem value="For Employees">For Employees</MenuItem>
+              </Select>
+            </FormControl>
             <CustomRewardInput
               iconName="PiFactoryFill"
               placeholder="Industry*"

@@ -62,6 +62,10 @@ const CustomProfileEdit = ({ setProFlage }) => {
       document.removeEventListener("mousedown", handleClickOutside);
     };
   }, []);
+  const navpersonal = () => {
+    navigate("/SecReg");
+    handleProFlage();
+  }
 const navBank = () => {
     navigate("/bank-details");
     handleProFlage();
@@ -80,7 +84,7 @@ const navBank = () => {
         <div className="card-body">
          
          
-          <div className="profile-edit-text" onClick={navBank}>
+          <div className="profile-edit-text" onClick={navpersonal}>
             Enterprise Profile
           </div>
           <div className="profile-edit-text" onClick={navBank}>

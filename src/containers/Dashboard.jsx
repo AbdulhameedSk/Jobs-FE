@@ -10,15 +10,15 @@ import { useSelector } from "react-redux";
 import CustomChartBar from "../components/CustomChartBar/CustomChartBar";
 
 const chartConfig = {
-  uv: {
-    label: "UV",
+  Approved: {
+    label: "Approved",
     color: "hsl(var(--chart-1))",
   },
-  pv: {
-    label: "PV",
+  Under_Screening: {
+    label: "Under_Screening",
     color: "hsl(var(--chart-2))",
   },
-  amt: {
+  Declined: {
     label: "Amount",
     color: "hsl(var(--chart-3))",
   },
@@ -37,7 +37,32 @@ export default function Dashboard() {
   //   }
   //   return null;
   // };
-
+  const [sjobs, setSjobs] = useState([]);
+  const Get7Jobs = async () => {
+    setIsLoading(true);
+    try {
+      const result = await apiHandler({
+        url: endpoint.SEVEN_JOBS,
+        method: "POST",
+        authToken: authToken,
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${authToken}`,
+        },
+        data: { Eid: userId },
+      });
+      const seven=result.firstseven
+      setSjobs(result.data.data.last7daysjobs);
+    } catch (error) {
+      console.error("Error fetching job metrics:", error);
+    } finally {
+      setIsLoading(false);
+    }
+  };
+  
+  useEffect(() => {
+    Get7Jobs();
+  }, []);
   const ChartTooltipContent = ({ active, payload }) => {
     if (active && payload && payload.length) {
       const name = payload[0].name === 'Free to Public' ? 'Free' : payload[0].name;
@@ -173,22 +198,23 @@ useEffect(() => {
   
 
   const areaData = [
-    { name: 'Page A', uv: 40, pv: 24, amt: 24 },
-    { name: 'Page B', uv: 30, pv: 14, amt: 22 },
-    { name: 'Page C', uv: 20, pv: 10, amt: 23 },
-    { name: 'Page D', uv: 28, pv: 39, amt: 20 },
-    { name: 'Page E', uv: 19, pv: 48, amt: 22 },
-    { name: 'Page F', uv: 24, pv: 38, amt: 25 },
-    { name: 'Page G', uv: 35, pv: 43, amt: 21 },
+    { name: 'Page A', Approved: 40, Under_Screening: 24, Declined: 24 },
+    { name: 'Page B', Approved: 30, Under_Screening: 14, Declined: 22 },
+    { name: 'Page C', Approved: 20, Under_Screening: 10, Declined: 23 },
+    { name: 'Page D', Approved: 28, Under_Screening: 39, Declined: 20 },
+    { name: 'Page E', Approved: 19, Under_Screening: 48, Declined: 22 },
+    { name: 'Page F', Approved: 24, Under_Screening: 38, Declined: 25 },
+    { name: 'Page G', Approved: 35, Under_Screening: 43, Declined: 21 },
+    
   ];
 
   // const composedData = [
-  //   { name: 'Page A', uv: 590, pv: 800, amt: 1400 },
-  //   { name: 'Page B', uv: 868, pv: 967, amt: 1506 },
-  //   { name: 'Page C', uv: 1397, pv: 1098, amt: 989 },
-  //   { name: 'Page D', uv: 1480, pv: 1200, amt: 1228 },
-  //   { name: 'Page E', uv: 1520, pv: 1108, amt: 1100 },
-  //   { name: 'Page F', uv: 1400, pv: 680, amt: 1700 },
+  //   { name: 'Page A', Approved: 590, Under_Screening: 800, Declined: 1400 },
+  //   { name: 'Page B', Approved: 868, Under_Screening: 967, Declined: 1506 },
+  //   { name: 'Page C', Approved: 1397, Under_Screening: 1098, Declined: 989 },
+  //   { name: 'Page D', Approved: 1480, Under_Screening: 1200, Declined: 1228 },
+  //   { name: 'Page E', Approved: 1520, Under_Screening: 1108, Declined: 1100 },
+  //   { name: 'Page F', Approved: 1400, Under_Screening: 680, Declined: 1700 },
   // ];
 
   return (
@@ -216,9 +242,9 @@ useEffect(() => {
                     <XAxis dataKey="name" />
                     <YAxis />
                     <Tooltip content={<BARChartTooltipContent />} />
-                    <Bar dataKey="uv" stackId="1" fill="hsl(var(--chart-1))" />
-                    <Bar dataKey="pv" stackId="1" fill="hsl(var(--chart-2))" />
-                    <Bar dataKey="amt" stackId="1" fill="hsl(var(--chart-3))" />
+                    <Bar dataKey="Approved" stackId="1" fill="hsl(var(--chart-1))" />
+                    <Bar dataKey="Under_Screening" stackId="1" fill="hsl(var(--chart-2))" />
+                    <Bar dataKey="Declined" stackId="1" fill="hsl(var(--chart-3))" />
                   </BarChart>
                 </ResponsiveContainer>
               </ChartContainer>

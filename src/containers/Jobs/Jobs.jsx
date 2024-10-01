@@ -179,13 +179,14 @@ const Jobs = () => {
         const jobs = response.data.data.jobs;
         setHeaders([
           "Role",
+          "Publish Status",
           "OpenedFor",
-          "Sublish Status",
+          "type",
           "Industry",
           "City",
           "State",
           "Pincode",
-          "Status",
+          // "Status",
           "Applications",
           "Pending",
           "Declined",
@@ -258,13 +259,14 @@ const Jobs = () => {
 
           return [
             job.role,
+            job.status,
+            job.OpenedFor,
             job.type,
-            job.add_request,
             job.industry,
             job.city,
             job.state,
             job.pincode,
-            job.status,
+            // job.status,
             job.applicants.length,
             pendingApplicants.length, // Count of pending applicants
             declinedApplicants.length,
@@ -341,7 +343,7 @@ const Jobs = () => {
       });
       if (response.status === 200) {
         getJobs();
-        toast.success("Job deleted successfully");
+        toast.success("Job delete request sent successfully");
       } else {
         setIsLoading(false);
         toast.error("Failed to delete job");
