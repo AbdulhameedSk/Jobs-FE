@@ -67,7 +67,7 @@ const CustomChartBar = ({ videoDataBar }) => {
     labels: slicedLabels,
     datasets: [
       {
-        label: "Videos Uploaded",
+        label: "Jobs Posted",
         data: slicedDataValues,
         backgroundColor: "rgba(153, 102, 255, 0.6)", // Light purple
         borderColor: "rgba(153, 102, 255, 1)",       // Darker purple

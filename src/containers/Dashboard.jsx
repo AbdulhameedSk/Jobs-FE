@@ -38,6 +38,9 @@ export default function Dashboard() {
   const authToken = useSelector((state) => state.auth.authToken);
   const userId = useSelector((state) => state.user.userId);
 
+
+  
+
   const fetchJobs = async () => {
     setIsLoading(true);
     try {
@@ -51,7 +54,7 @@ export default function Dashboard() {
         },
         data: { Eid: userId },
       });
-      setJobs(result.data);
+      // setJobs(result.data);
       processJobData(result.data);
     } catch (error) {
       console.error("Error fetching job metrics:", error);
@@ -157,7 +160,8 @@ export default function Dashboard() {
         },
       });
       if (result.status === 200) {
-        setChartJobData(result.data.data.last1yearjobs);
+        setJobs(result.data.data.last1yearjobs);
+        console.log(result.data.data.last1yearjobs);
       }
     } catch (error) {
       console.error("Error fetching job metrics:", error);
@@ -227,7 +231,7 @@ export default function Dashboard() {
         <Header title={"Dashboard"} />
       </div>
       <div className="flex-grow">
-        <CustomChartBar Jobs={chartJobData} />
+       <CustomChartBar videoDataBar={jobs} />
 
         <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
           <Card>
