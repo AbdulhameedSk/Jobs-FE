@@ -27,6 +27,7 @@ export default function SkAddQuestion({ onClose, setIsLoading, addVideoData }) {
     const { name, value } = e.target;
     setFormData((prev) => ({ ...prev, [name]: value }));
   };
+
   const openCustomAlert = (setId) => {
     setShowAlert(true);
     setSetId(setId);
@@ -35,7 +36,6 @@ export default function SkAddQuestion({ onClose, setIsLoading, addVideoData }) {
   const getVideoData = async () => {
     setIsLoading(true);
     try {
-      const token=localStorage.getItem('token');
       const res = await apiHandler({
         method: "POST",
         url: endpoint.QUESTION_BY_VIDEO_ID,
@@ -43,29 +43,28 @@ export default function SkAddQuestion({ onClose, setIsLoading, addVideoData }) {
           videoId: addVideoData._id,
           categoryId: addVideoData.categoryId._id,
         },
-        authToken,
+        authToken: authToken,
         headers: {
           "Content-Type": "application/json",
-          "Authorization": `Bearer ${token}`,
         },
       });
 
       if (res.status === 200) {
-        setVideoData(res.data?.data);
+        setVideoData(res.data?.data || { question: { questionset: [] } });
       } else {
         toast.error(res.data.message);
       }
-      setIsLoading(false);
     } catch (error) {
-      console.log(error);
+      console.error(error);
       toast.error("Something went wrong");
+    } finally {
       setIsLoading(false);
     }
   };
+
   const addQuestion = async () => {
     setIsLoading(true);
     try {
-      const token=localStorage.getItem('token');
       const res = await apiHandler({
         method: "POST",
         url: endpoint.QUESTION,
@@ -86,10 +85,9 @@ export default function SkAddQuestion({ onClose, setIsLoading, addVideoData }) {
           ],
           edit: " ",
         },
-        authToken,
+        authToken: authToken,
         headers: {
           "Content-Type": "application/json",
-          "Authorization": `Bearer ${token}`,
         },
       });
 
@@ -99,19 +97,18 @@ export default function SkAddQuestion({ onClose, setIsLoading, addVideoData }) {
         getVideoData();
       } else {
         toast.error(res.data.message);
-        setIsLoading(false);
       }
     } catch (error) {
-      console.log(error);
+      console.error(error);
       toast.error("Something went wrong");
+    } finally {
       setIsLoading(false);
     }
   };
+
   const deleteQuestion = async () => {
     setIsLoading(true);
-    console.log(videoData);
     try {
-      const token=localStorage.getItem('token');
       const res = await apiHandler({
         method: "DELETE",
         url: endpoint.QUESTION_DELETE,
@@ -119,10 +116,9 @@ export default function SkAddQuestion({ onClose, setIsLoading, addVideoData }) {
           questionID: videoData.question._id,
           setId: setId,
         },
-        authToken,
+        authToken: authToken,
         headers: {
           "Content-Type": "application/json",
-          "Authorization": `Bearer ${token}`,
         },
       });
 
@@ -131,18 +127,18 @@ export default function SkAddQuestion({ onClose, setIsLoading, addVideoData }) {
         getVideoData();
       } else {
         toast.error(res.data.message);
-        setIsLoading(false);
       }
     } catch (error) {
-      console.log(error);
+      console.error(error);
       toast.error("Something went wrong");
+    } finally {
       setIsLoading(false);
     }
   };
+
   const updateQuestion = async () => {
     setIsLoading(true);
     try {
-      const token=localStorage.getItem('token');
       const res = await apiHandler({
         method: "POST",
         url: endpoint.QUESTION,
@@ -163,10 +159,9 @@ export default function SkAddQuestion({ onClose, setIsLoading, addVideoData }) {
           ],
           edit: setId,
         },
-        authToken,
+        authToken: authToken,
         headers: {
           "Content-Type": "application/json",
-          "Authorization": `Bearer ${token}`,
         },
       });
 
@@ -176,14 +171,15 @@ export default function SkAddQuestion({ onClose, setIsLoading, addVideoData }) {
         getVideoData();
       } else {
         toast.error(res.data.message);
-        setIsLoading(false);
       }
     } catch (error) {
-      console.log(error);
+      console.error(error);
       toast.error("Something went wrong");
+    } finally {
       setIsLoading(false);
     }
   };
+
   const setEditData = (question) => {
     setEdit(true);
     setSetId(question.id);
@@ -196,6 +192,7 @@ export default function SkAddQuestion({ onClose, setIsLoading, addVideoData }) {
       correctAnswer: question.answer,
     });
   };
+
   const clearAll = () => {
     setEdit(false);
     setFormData({
@@ -249,7 +246,6 @@ export default function SkAddQuestion({ onClose, setIsLoading, addVideoData }) {
           name="answer2"
           onChange={handleChange}
         />
-
         <CustomInput
           label="Answer 3"
           text="text"
@@ -279,13 +275,11 @@ export default function SkAddQuestion({ onClose, setIsLoading, addVideoData }) {
           name="correctAnswer"
           onChange={handleChange}
         >
-          {Array.from({ length: 4 }, (_, i) => i + 1).map((seq) => {
-            return (
-              <MenuItem key={seq} value={seq}>
-                Answer {seq}
-              </MenuItem>
-            );
-          })}
+          {Array.from({ length: 4 }, (_, i) => i + 1).map((seq) => (
+            <MenuItem key={seq} value={seq}>
+              Answer {seq}
+            </MenuItem>
+          ))}
         </Select>
       </FormControl>
       {edit ? (
@@ -298,55 +292,50 @@ export default function SkAddQuestion({ onClose, setIsLoading, addVideoData }) {
         </button>
       )}
       <div>
-        {videoData &&
-          videoData.question.questionset.map((question, index) => {
-            return (
-              <div key={index} className="question-card">
-                <div className="question">
-                  <div>
-                    <p>{question.question}</p>
-                  </div>
-                  <div className="icons">
-                    <div
-                      className="icon blue"
-                      onClick={() => {
-                        setEditData(question);
-                      }}
-                    >
-                      <CustomIcon name="MdEdit" tag="Edit Question" />
-                    </div>
-                    <div
-                      className="icon red"
-                      onClick={() => openCustomAlert(question.id)}
-                    >
-                      <CustomIcon name="MdDelete" tag="Delete Question" />
-                    </div>
-                  </div>
+        {videoData?.question?.questionset?.length > 0 ? (
+          videoData.question.questionset.map((question, index) => (
+            <div key={index} className="question-card">
+              <div className="question">
+                <div>
+                  <p>{question.question}</p>
                 </div>
-                <div className="answers">
-                  {question.option.map((option, index) => {
-                    return (
-                      <div key={index} className="answer">
-                        <p>
-                          {index + 1}. {option}
-                        </p>
-                      </div>
-                    );
-                  })}
-                </div>
-                <div className="correct-answer">
-                  <p>Correct Answer: {question.answer}</p>
+                <div className="icons">
+                  <div
+                    className="icon blue"
+                    onClick={() => setEditData(question)}
+                  >
+                    <CustomIcon name="MdEdit" tag="Edit Question" />
+                  </div>
+                  <div
+                    className="icon red"
+                    onClick={() => openCustomAlert(question.id)}
+                  >
+                    <CustomIcon name="MdDelete" tag="Delete Question" />
+                  </div>
                 </div>
               </div>
-            );
-          })}
+              <div className="answers">
+                {question.option.map((option, index) => (
+                  <div key={index} className="answer">
+                    <p>
+                      {index + 1}. {option}
+                    </p>
+                  </div>
+                ))}
+              </div>
+              <div className="correct-answer">
+                <p>Correct Answer: {question.answer}</p>
+              </div>
+            </div>
+          ))
+        ) : (
+          <p>No questions available. Add a new question to get started.</p>
+        )}
       </div>
       {showAlert && (
         <CustomAlert
           show={showAlert}
-          onClickFunction={() => {
-            deleteQuestion();
-          }}
+          onClickFunction={deleteQuestion}
           onCancelFunction={() => setShowAlert(false)}
           message="Are you sure you want to delete this Question?"
           type="delete"
