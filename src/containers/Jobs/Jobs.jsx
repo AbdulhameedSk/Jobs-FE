@@ -446,7 +446,8 @@ const Jobs = () => {
   }, []);
 
   return (
-    <div>
+    <div className="relative">
+      <div className="sticky top-0 z-10 bg-white">
       <Header
         title={applicantsPage ? "Job Applicants" : "Jobs"}
         icon={"FaPlus"}
@@ -460,7 +461,7 @@ const Jobs = () => {
         clearFilterFun={triggerClearFilter}
         handleIsPosting={handleIsPosting}
       />
-
+</div>
       {isLoading && (
         <Spinner show={isLoading} closeModal={() => setIsLoading(false)} />
       )}

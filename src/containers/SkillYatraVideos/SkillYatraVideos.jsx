@@ -365,7 +365,8 @@
 
 
     return (
-      <div>
+      <div className="relative">
+        <div className="sticky top-0 z-10 bg-white">
         <Header
           tiltel={"Skill Yatra Videos"}
           icon={"FaPlus"}
@@ -378,6 +379,7 @@
           filterTypes={filterTypes}
           textAlign={textAlign}
         />
+        </div>
         {isPosting ? (
           <div className="video-table">
             <SkPostVideo
