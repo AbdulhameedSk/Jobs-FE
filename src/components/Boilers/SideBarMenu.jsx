@@ -10,7 +10,6 @@ const SideBarMenu = () => {
   const [isListSecOpen, setIsListSecOpen] = useState(false);
   const [selectedItem, setSelectedItem] = useState(null);
 
-
   const toggleListSkill = () => {
     setIsListOpenSkill(!isListOpenSkill);
   };
@@ -32,56 +31,76 @@ const SideBarMenu = () => {
 
       <div className="sideBar-border-line"></div>
       <div style={{ marginTop: "15px", padding: "0px 20px 0px 20px" }}>
-      {(
-          <div
-            onClick={() => handleItemClick("dashboard")}
-            style={{
-              backgroundColor:
-                selectedItem === "dashboard" ? "lightblue" : "transparent",
-              borderRadius: "5px",
-            }}
-            className="side-fixing-text-sd"
-          >
-            <div className="side-icon-dash">
-              <CustomIcon name={"MdDashboard"} />
-            </div>
-            <div
-              className="sideBar-text-dash"
-              style={{
-                color:
-                  selectedItem === "dashboard" ? "#1e81d2" : "rgb(144 132 132)",
-              }}
-            >
-              Dashboard
-            </div>
+        <div
+          onClick={() => handleItemClick("dashboard")}
+          style={{
+            backgroundColor:
+              selectedItem === "dashboard" ? "lightblue" : "transparent",
+            borderRadius: "5px",
+          }}
+          className="side-fixing-text-sd"
+        >
+          <div className="side-icon-dash">
+            <CustomIcon name={"MdDashboard"} />
           </div>
-        )}
-      {(
           <div
-            onClick={() => handleItemClick("Permissions")}
+            className="sideBar-text-dash"
             style={{
-              backgroundColor:
-                selectedItem === "Permissions" ? "lightblue" : "transparent",
-              borderRadius: "5px",
+              color:
+                selectedItem === "dashboard" ? "#1e81d2" : "rgb(144 132 132)",
             }}
-            className="side-fixing-text-sd"
           >
-            <div className="side-icon-dash">
-              <CustomIcon name={"PiStudentFill"} />
-            </div>
-            <div
-              className="sideBar-text-dash"
-              style={{
-                color:
-                  selectedItem === "Permissions" ? "#1e81d2" : "rgb(144 132 132)",
-              }}
-            >
-              Course Permissions
-            </div>
+            Dashboard
           </div>
-        )}
-      {(
+        </div>
+        <div
+              onClick={() => handleItemClick("partners")}
+              style={{
+                backgroundColor:
+                  selectedItem === "partners" ? "lightblue" : "transparent",
+                borderRadius: "5px",
+              }}
+              className="side-fixing-text-col"
+            >
+              <div className="side-icon-dash-col">
+                <CustomIcon name={"FaHandshakeSimple"} />
+              </div>
+              <div
+                className="sideBar-text-dash-col"
+                style={{
+                  color:
+                    selectedItem === "partners"
+                      ? "#1e81d2"
+                      : "rgb(144 132 132)",
+                }}
+              >
+                Partners
+              </div>
+            </div>
+        <div
+          onClick={() => handleItemClick("Permissions")}
+          style={{
+            backgroundColor:
+              selectedItem === "Permissions" ? "lightblue" : "transparent",
+            borderRadius: "5px",
+          }}
+          className="side-fixing-text-sd"
+        >
+          <div className="side-icon-dash">
+            <CustomIcon name={"PiStudentFill"} />
+          </div>
           <div
+            className="sideBar-text-dash"
+            style={{
+              color:
+                selectedItem === "Permissions" ? "#1e81d2" : "rgb(144 132 132)",
+            }}
+          >
+            Course Permissions
+          </div>
+        </div>
+
+        <div
           onClick={() => handleItemClick("usertable")}
           style={{
             backgroundColor:
@@ -90,9 +109,9 @@ const SideBarMenu = () => {
           }}
           className="side-fixing-text-sd"
         >
-           <div className="side-icon-dash">
-              <CustomIcon name={"GrUserSettings"} />
-            </div>
+          <div className="side-icon-dash">
+            <CustomIcon name={"GrUserSettings"} />
+          </div>
           <div
             className="sideBar-text-dash"
             style={{
@@ -103,19 +122,16 @@ const SideBarMenu = () => {
             Section Permission
           </div>
         </div>
-        )}
-      
 
-        {
-          <div className="side-skill-fix" onClick={() => toggleListSkill()}>
-            <div className="side-sy-text">Training</div>
-            <div className="side-sy-icon">
-              <CustomIcon
-                name={isListOpenSkill ? "IoIosArrowUp" : "IoIosArrowDown"}
-              />
-            </div>
+        <div className="side-skill-fix" onClick={toggleListSkill}>
+          <div className="side-sy-text">Training</div>
+          <div className="side-sy-icon">
+            <CustomIcon
+              name={isListOpenSkill ? "IoIosArrowUp" : "IoIosArrowDown"}
+            />
           </div>
-        }
+        </div>
+        
         {isListOpenSkill && (
           <div>
             <div
@@ -172,16 +188,14 @@ const SideBarMenu = () => {
           </div>
         )}
 
-        {
-          <div className="side-skill-fix" onClick={() => toggleListSecond()}>
-            <div className="side-sy-text">Recruitment</div>
-            <div className="side-sy-icon">
-              <CustomIcon
-                name={isListSecOpen ? "IoIosArrowUp" : "IoIosArrowDown"}
-              />
-            </div>
+        <div className="side-skill-fix" onClick={toggleListSecond}>
+          <div className="side-sy-text">Recruitment</div>
+          <div className="side-sy-icon">
+            <CustomIcon
+              name={isListSecOpen ? "IoIosArrowUp" : "IoIosArrowDown"}
+            />
           </div>
-        }
+        </div>
 
         {isListSecOpen && (
           <div>
@@ -207,11 +221,11 @@ const SideBarMenu = () => {
                 Jobs
               </div>
             </div>
-           
+
+          
           </div>
         )}
-       
-        
+         
       </div>
     </div>
   );

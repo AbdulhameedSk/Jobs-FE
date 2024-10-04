@@ -1,0 +1,51 @@
+.switch {
+    display: flex;
+    padding: 0 5px;
+    width: fit-content;
+    align-items: center;
+    background-color: #f2f2f2;
+    height: 40px;
+    border-radius: 5px;
+    gap: 5px;
+    position: relative;
+  }
+  
+  .switch .switch-item {
+    display: flex;
+    align-items: center;
+    cursor: pointer;
+    padding: 3px;
+    border-radius: 5px;
+    transition: all 0.5s;
+    color: #000;
+  }
+  
+  .switch .switch-item.active {
+    background-color: #1e81d2;
+    color: #f2f2f2;
+  }
+  
+  .switch .icon {
+    font-size: 25px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+  
+  .switch span {
+    display: none;
+    position: absolute;
+    color: #000;
+    top: 40px;
+    left: -10px;
+    background-color: #f2f2f2;
+    border-radius: 5px;
+    width: 100px;
+    text-align: center;
+    font-size: 16px;
+    padding: 5px;
+  }
+  
+  .switch .switch-item:hover span {
+    display: block;
+  }

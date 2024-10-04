@@ -17,6 +17,8 @@ import UserTable from "./containers/section-permission/UserTable";
 import Index from "./containers/HomePage/Index";
 import ECategory from "./containers/category/ECategory";
 import BankDetails from "./containers/BankDetails";
+import Partners from "./containers/Partners/Partners.jsx";
+
 function App() {
   return (
     <>
@@ -41,6 +43,7 @@ function App() {
             <Route exact path="/spermissions" element={<SectionPermission />} />
             <Route exact path="/skillyatravideos" element={<SkillYatraVideos />} />
             <Route exact path="/usertable" element={<UserTable />} />
+            <Route exact path="partners" element={<Partners />} />
 
             </Route>
             <Route exact path="/bank-details" element={<BankDetails />} />
