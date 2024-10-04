@@ -29,14 +29,15 @@ const Partners = () => {
     try {
       const result = await apiHandler({
         url: endpoint.ENTERPRISE_PARTNERS,
-        method: "GET",
+        method: "POST",
         headers: {
           "Content-Type": "application/json",
           Authorization: `Bearer ${authToken}`,
         },
         authToken: authToken,
+        data: { Eid: userId }  // Correctly send the Eid
       });
-      
+  
       if (result && result.data && Array.isArray(result.data.partnerList)) {
         setPartnerData(result.data.partnerList);
         setTotalPages(Math.ceil(result.data.partnerList.length / rowsPerPage));
