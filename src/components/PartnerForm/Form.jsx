@@ -1,6 +1,7 @@
 import React from "react";
-import CustomIcon from "../CustomIcon";
-import "./CustomRewardInput.css";
+import "../../components/CustomRewardInput/CustomRewardInput.css";
+import CustomIcon from "../../components/CustomIcon";
+
 const CustomRewardInput = ({
   iconName,
   type,
@@ -14,9 +15,9 @@ const CustomRewardInput = ({
   return (
     <div>
       <div>
-        <div className="input-group input-bg-color mb-3 flex ">
-          <span className="input-group-text reword-icon-fix ">
-            <div className="reward-icon-side-fix  ">
+        <div className="input-group input-bg-color mb-3">
+          <span className="input-group-text reword-icon-fix">
+            <div className="reward-icon-side-fix">
               <CustomIcon name={iconName} />
             </div>
           </span>
@@ -24,7 +25,7 @@ const CustomRewardInput = ({
             <input
               type={type}
               placeholder={placeholder}
-              class="form-control reward-input-fixing"
+              className="form-control reward-input-fixing"
               style={{ ...style }}
               name={name}
               value={value}

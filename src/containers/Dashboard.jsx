@@ -259,7 +259,7 @@ export default function Dashboard() {
 
           <Card>
             <CardHeader>
-              <CardTitle>Applicant Status Distribution</CardTitle>
+              <CardTitle>Cate</CardTitle>
               <CardDescription>Overall distribution of applicant statuses</CardDescription>
             </CardHeader>
             <CardContent>

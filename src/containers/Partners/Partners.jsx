@@ -10,6 +10,7 @@ import toast from "react-hot-toast";
 import CustomAlert from "../../components/CustomAlert/CustomAlert.jsx";
 import Pagination from "../../components/Pagination/Pagination.jsx";
 import { useSelector } from "react-redux";
+import FieldsPopup from "./FieldsPopup"; // Import the new FieldsPopup component
 
 const Partners = () => {
   const [partnerData, setPartnerData] = useState([]);
@@ -24,6 +25,10 @@ const Partners = () => {
 
   const userId = useSelector((state) => state.user.userId);
   const authToken = useSelector((state) => state.auth.authToken);
+  
+  const [showFieldsPopup, setShowFieldsPopup] = useState(false);
+  const [selectedPartner, setSelectedPartner] = useState(null);
+
   const handlePartner = async () => {
     setIsLoading(true);
     try {
@@ -34,10 +39,9 @@ const Partners = () => {
           "Content-Type": "application/json",
           Authorization: `Bearer ${authToken}`,
         },
-        authToken: authToken,
-        data: { Eid: userId }  // Correctly send the Eid
+        data: { Eid: userId }
       });
-  
+
       if (result && result.data && Array.isArray(result.data.partnerList)) {
         setPartnerData(result.data.partnerList);
         setTotalPages(Math.ceil(result.data.partnerList.length / rowsPerPage));
@@ -56,7 +60,6 @@ const Partners = () => {
   const updatePartnerStatus = async (id, status) => {
     setIsLoading(true);
     try {
-      const token = localStorage.getItem("token");
       const result = await apiHandler({
         url: endpoint.PARTNER_STATUS,
         method: "PUT",
@@ -64,22 +67,19 @@ const Partners = () => {
         data: { _id: id, status: status },
         headers: {
           "Content-Type": "application/json",
-          Authorization: `Bearer ${token}`,
         },
       });
       if (result.status === 200) {
         handlePartner();
         toast.success(
-          `Partner ${
-            status === "Active" ? "Activated" : "Deactivated"
-          } Successfully`
+          `Partner ${status === "Active" ? "Activated" : "Deactivated"} Successfully`
         );
       } else {
         toast.error("Something went wrong");
-        setIsLoading(false);
       }
     } catch (err) {
       toast.error("Something went wrong");
+    } finally {
       setIsLoading(false);
     }
   };
@@ -101,10 +101,10 @@ const Partners = () => {
         toast.success("Partner Deleted Successfully");
       } else {
         toast.error("Something went wrong");
-        setIsLoading(false);
       }
     } catch (err) {
       toast.error("Something went wrong");
+    } finally {
       setIsLoading(false);
     }
   };
@@ -114,8 +114,9 @@ const Partners = () => {
     setShowAlert(true);
   };
 
-  const jumpTo = (link) => {
-    window.open(link, "_blank", "noreferrer");
+  const OpenFieldsAsPopUp = (partner) => {
+    setSelectedPartner(partner);
+    setShowFieldsPopup(true);
   };
 
   useEffect(() => {
@@ -128,82 +129,67 @@ const Partners = () => {
 
   const indexOfLastPartner = currentPage * rowsPerPage;
   const indexOfFirstPartner = indexOfLastPartner - rowsPerPage;
-  const currentPartners = partnerData.slice(
-    indexOfFirstPartner,
-    indexOfLastPartner
-  );
+  const currentPartners = partnerData.slice(indexOfFirstPartner, indexOfLastPartner);
 
   return (
     <div className="relative">
       <div className="sticky top-0 z-10 bg-white">
-      <Header
-        title={"Partner"}
-        icon={  "FaPlus" }
-        onClickFunc={
-          true ? () => setShowModal(true) : null
-        }
-      />
+        <Header
+          title={"Partner"}
+          icon={"FaPlus"}
+          onClickFunc={() => setShowModal(true)}
+        />
       </div>
       <div className="p-3">
         <div className="d-flex flex-wrap">
           {currentPartners.map((item, index) => (
-            <div
-              key={index}
-              className="card-container"
-              onClick={() => jumpTo(item.link)}
-            >
+            <div key={index} className="card-container">
               <div className="icons">
-                {true && (
-                  <>
-                    {item.status === "Active" ? (
-                      <div
-                        className="icon yellow"
-                        onClick={(e) => {
-                          e.stopPropagation();
-                          updatePartnerStatus(item._id, "Deactive");
-                        }}
-                      >
-                        <CustomIcon
-                          name="IoIosPause"
-                          tag="Deactivate Partner"
-                        />
-                      </div>
-                    ) : (
-                      <div
-                        className="icon green"
-                        onClick={(e) => {
-                          e.stopPropagation();
-                          updatePartnerStatus(item._id, "Active");
-                        }}
-                      >
-                        <CustomIcon name="IoIosPlay" tag="Activate Partner" />
-                      </div>
-                    )}
-                    <div
-                      className="icon blue"
-                      onClick={(e) => {
-                        e.stopPropagation();
-                        setUpdateData(item);
-                        setShowModal(true);
-                      }}
-                    >
-                      <CustomIcon name="MdEdit" tag="Edit Partner" />
-                    </div>
-                    <div
-                      className="icon red"
-                      onClick={(e) => {
-                        e.stopPropagation();
-                        handleShowAlert(item._id);
-                      }}
-                    >
-                      <CustomIcon name="MdDelete" tag="Delete Partner" />
-                    </div>
-                  </>
+                {item.status === "Active" ? (
+                  <div
+                    className="icon yellow"
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      updatePartnerStatus(item._id, "Deactive");
+                    }}
+                  >
+                    <CustomIcon name="IoIosPause" tag="Deactivate Partner" />
+                  </div>
+                ) : (
+                  <div
+                    className="icon green"
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      updatePartnerStatus(item._id, "Active");
+                    }}
+                  >
+                    <CustomIcon name="IoIosPlay" tag="Activate Partner" />
+                  </div>
                 )}
+                <div
+                  className="icon blue"
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    setUpdateData(item);
+                    setShowModal(true);
+                  }}
+                >
+                  <CustomIcon name="MdEdit" tag="Edit Partner" />
+                </div>
+                <div
+                  className="icon red"
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    handleShowAlert(item._id);
+                  }}
+                >
+                  <CustomIcon name="MdDelete" tag="Delete Partner" />
+                </div>
               </div>
               <div
                 className="cardbox"
                 style={{ backgroundImage: `url("${item.image}")` }}
+                onClick={() => OpenFieldsAsPopUp(item)}
               />
               <div className="cardtext">{item.name}</div>
             </div>
@@ -222,18 +208,26 @@ const Partners = () => {
           }}
         />
       )}
-      {isLoading && (
-        <Spinner show={isLoading} closeModal={() => setIsLoading(false)} />
-      )}
+      {isLoading && <Spinner show={isLoading} />}
       {showAlert && (
         <CustomAlert
           show={showAlert}
           onClickFunction={deletePartner}
-          onCancelFunction={() => setShowAlert(false)}
-          message="Are you sure you want to delete this Partner?"
-          type="delete"
+          submit={() => {
+            deletePartner(deleteId);
+            setShowAlert(false);
+          }}
+          close={() => setShowAlert(false)}
+          description="Are you sure you want to delete this Partner?"
+          title="Delete"
         />
       )}
+      <FieldsPopup
+        isOpen={showFieldsPopup}
+        toggle={() => setShowFieldsPopup(false)}
+        fields={selectedPartner?.fields || {}}
+        partnerName={selectedPartner?.name || ""}
+      />
       <Pagination
         currentPage={currentPage}
         totalPages={totalPages}

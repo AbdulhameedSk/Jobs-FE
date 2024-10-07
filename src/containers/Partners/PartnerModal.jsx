@@ -1,13 +1,10 @@
 import React, { useState, useEffect } from "react";
-import CustomRewardInput from "../../components/CustomRewardInput/CustomRewardInput.jsx";
-import CustomIcon from "../../components/CustomIcon.jsx";
-import CustomToggleSwitch from "../../components/CustomToggleSwitch/CustomToggleSwitch.jsx";
-import CustomSwitch from "../../components/CustomSwitch/CustomSwitch.jsx";
-import { endpoint } from "../../apis/endpoint.js";
-import { apiHandler } from "../../apis/index";
-import toast from "react-hot-toast";
 import { useSelector } from "react-redux";
+import toast from "react-hot-toast";
 import { Modal } from "reactstrap";
+import { endpoint } from "../../apis/endpoint";
+import { apiHandler } from "../../apis/index";
+import "./PartnerModal.css";
 
 const PartnerModal = ({
   updateData,
@@ -16,75 +13,135 @@ const PartnerModal = ({
   isOpen,
   onClose,
 }) => {
-  const [selectedFile, setSelectedFile] = useState(null);
-  const [introFile, setIntroFile] = useState(null);
+  // State for file uploads
+  const [selectedImage, setSelectedImage] = useState(null);
+  const [introImage, setIntroImage] = useState(null);
   const [isIntro, setIsIntro] = useState(false);
   const [isState, setIsState] = useState(0);
+  const userId = useSelector((state) => state.user.userId);
+
+  // State for form data
   const [formData, setFormData] = useState({
     name: "",
-    link: "",
+    // link: "",
     category: "",
     intro_description: "",
     intro_video: "",
+    Eid: userId,
   });
+  
+  // State for dynamic fields
+  const [fields, setFields] = useState([{ label: "", value: "" }]);
+  
+  // Get auth token from Redux store
   const authToken = useSelector((state) => state.auth.authToken);
-  const userId = useSelector((state) => state.user.userId);
 
-  const handleFileChange = (e) => {
-    const file = e.target.files[0];
-    setSelectedFile(file);
-    console.log("Selected file:", file.name);
-  };
+  // Populate form data if updating an existing partner
+  useEffect(() => {
+    if (updateData) {
+      setFormData({
+        name: updateData.name || "",
+        // link: updateData.link || "",
+        category: updateData.category || "",
+        intro_description: updateData.intro_description || "",
+        intro_video: updateData.intro_video || "",
+        Eid: userId||"Issue",
+      });
+      setSelectedImage(updateData.images || null);
+      setIntroImage(updateData.intro_images || null);
+      setIsIntro(updateData.intro_status || false);
+      setIsState(updateData.intro_video ? 1 : 0);
+      setFields(updateData.fields || [{ label: "", value: "" }]);
+    }
+  }, [updateData]);
 
-  const handleIntroFileChange = (e) => {
-    const file = e.target.files[0];
-    setIntroFile(file);
-    console.log("Intro file:", file.name);
-  };
-
+  // Handle text and URL input changes
   const handleInputChange = (e) => {
     const { name, value } = e.target;
     setFormData((prevData) => ({ ...prevData, [name]: value }));
   };
 
-  const setIsIntroFunc = (newChecked) => {
-    setIsIntro(newChecked);
+  // Handle image file selection
+  const handleImageChange = (e) => {
+    const file = e.target.files[0];
+    setSelectedImage(file);
+    console.log("Selected image:", file.name);
+    // Optionally, update formData.link if needed
+    // setFormData((prevData) => ({ ...prevData, link: file.name }));
   };
 
-  const handleChangeState = (newState) => {
-    setIsState(newState);
+  // Handle intro image file selection
+  const handleIntroImageChange = (e) => {
+    const file = e.target.files[0];
+    setIntroImage(file);
+    console.log("Intro image:", file.name);
+    // Optionally, update formData.intro_video or another field if needed
   };
 
-  const handleRemoveFile = (e) => {
+  // Handle dynamic field changes
+  const handleFieldChange = (index, event) => {
+    const { name, value } = event.target;
+    const newFields = fields.map((field, i) => {
+      if (i === index) {
+        return { ...field, [name]: value };
+      }
+      return field;
+    });
+    setFields(newFields);
+  };
+
+  // Add a new dynamic field
+  const handleAddField = () => {
+    setFields([...fields, { label: "", value: "" }]);
+  };
+
+  // Remove selected image
+  const handleRemoveImage = (e) => {
     e.preventDefault();
-    setSelectedFile(null);
+    setSelectedImage(null);
   };
 
-  const handleRemoveIntroFile = (e) => {
+  // Remove intro image
+  const handleRemoveIntroImage = (e) => {
     e.preventDefault();
-    setIntroFile(null);
+    setIntroImage(null);
   };
 
-  const addPartner = async () => {
+  // Toggle intro status
+  const toggleIntroStatus = () => {
+    setIsIntro((prev) => !prev);
+  };
+
+  // Change intro state (0 for image, 1 for video)
+  const handleChangeState = (e) => {
+    setIsState(parseInt(e.target.value, 10));
+  };
+
+  // Function to handle adding a new partner
+  const addPartner = async (e) => {
+    e.preventDefault(); // Prevent default form submission
     onClose();
     const data = new FormData();
     data.append("name", formData.name);
-    data.append("link", formData.link);
+    // data.append("link", formData.link);
     data.append("category", formData.category);
-    data.append("status", "active"); // Assuming a default status
-    data.append("Eid", userId); // Assuming a default Eid
-    if (selectedFile) {
-      data.append("images", selectedFile);
+    data.append("status", "active");
+    data.append("fields", JSON.stringify(fields));
+data.append("Eid", userId);
+    if (selectedImage) {
+      data.append("images", selectedImage);
     }
+
     if (isIntro) {
       data.append("intro_description", formData.intro_description);
-      if (isState === 0 && introFile) {
-        data.append("images", introFile);
+      if (isState === 0 && introImage) {
+        data.append("intro_images", introImage);
       } else if (isState === 1) {
         data.append("intro_video", formData.intro_video);
       }
       data.append("intro_status", isIntro);
     }
+
     setIsLoading(true);
     try {
       const response = await apiHandler({
@@ -100,8 +157,8 @@ const PartnerModal = ({
         handlePartner();
         toast.success("Partner added successfully");
       } else {
-        console.error("Failed to add partner:", response);
-        toast.error("Failed to add partner.");
+        // console.error("Failed to add partner:", response);
+        // toast.error("Failed to add partner.");
         setIsLoading(false);
       }
     } catch (error) {
@@ -111,26 +168,32 @@ const PartnerModal = ({
     }
   };
 
-  const updatePartner = async () => {
+  // Function to handle updating an existing partner
+  const updatePartner = async (e) => {
+    e.preventDefault(); // Prevent default form submission
     onClose();
     const data = new FormData();
     data.append("_id", updateData._id);
     data.append("name", formData.name);
-    data.append("link", formData.link);
+    // data.append("link", formData.link);
     data.append("category", formData.category);
-    data.append("status", "active"); // Assuming a default status
-    if (selectedFile) {
-      data.append("images", selectedFile);
+    data.append("status", "active");
+    data.append("fields", JSON.stringify(fields));
+
+    if (selectedImage) {
+      data.append("images", selectedImage);
     }
+
     if (isIntro) {
       data.append("intro_description", formData.intro_description);
-      if (isState === 0 && introFile) {
-        data.append("images", introFile);
+      if (isState === 0 && introImage) {
+        data.append("intro_images", introImage);
       } else if (isState === 1) {
         data.append("intro_video", formData.intro_video);
       }
       data.append("intro_status", isIntro);
     }
+
     setIsLoading(true);
     try {
       const response = await apiHandler({
@@ -157,226 +220,210 @@ const PartnerModal = ({
     }
   };
 
-  useEffect(() => {
-    if (updateData) {
-      setFormData({
-        name: updateData.name,
-        link: updateData.link,
-        category: updateData.category,
-        intro_description: updateData.intro_description,
-        intro_video: updateData.intro_video,
-      });
-      setSelectedFile(updateData.images);
-      setIntroFile(updateData.intro_images);
-      setIsIntro(updateData.intro_status);
-      setIsState(updateData.intro_video ? 1 : 0);
-    }
-  }, [updateData]);
-
   return (
-    <Modal backdrop={"static"} isOpen={isOpen} toggle={onClose} centered>
-      <div className="partner-modal" width="100%">
-        <div className="modal-dialog modal-lg modal-dialog-centered">
-          <div
-            className="modal-content video-background-color"
-            style={{ height: "max-content" }}
-          >
-            <div
-              className="modal-header"
-              style={{ backgroundColor: "#bac7d3" }}
-            >
-              <h5
-                className="modal-title"
-                id="exampleModalLabel"
-                style={{ color: "#2d88ba" }}
-              >
-                {updateData ? "Update Partner" : "Add New Partner"}
-              </h5>
-              <button
-                type="button"
-                className="btn-close"
-                onClick={onClose}
-              ></button>
+    <Modal isOpen={isOpen} toggle={onClose}>
+      <form
+        className="bg-white p-6 rounded-lg shadow-lg w-full"
+        onSubmit={updateData ? updatePartner : addPartner}
+      >
+        <div className="flex flex-col space-y-4">
+          {/* Name Input */}
+          <input
+            className="border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
+            type="text"
+            name="name"
+            placeholder="Name"
+            value={formData.name}
+            onChange={handleInputChange}
+            required
+          />
+
+          {/* Link Input (URL) */}
+          {/* <input
+            className="border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
+            type="url"
+            name="link"
+            placeholder="Link (URL)"
+            value={formData.link}
+            onChange={handleInputChange}
+            required
+          /> */}
+
+          {/* Image File Input */}
+          <div>
+            <label className="block text-gray-700">Image:</label>
+            <input
+              type="file"
+              name="images"
+              accept="image/*"
+              onChange={handleImageChange}
+              className="mt-1"
+            />
+            {selectedImage && (
+              <div className="flex items-center mt-2">
+                <span>{selectedImage.name}</span>
+                <button
+                  onClick={handleRemoveImage}
+                  className="ml-2 text-red-500 underline"
+                >
+                  Remove
+                </button>
+              </div>
+            )}
+          </div>
+
+          {/* Category Input */}
+          <input
+            className="border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
+            type="text"
+            name="category"
+            placeholder="Category"
+            value={formData.category}
+            onChange={handleInputChange}
+            required
+          />
+
+          {/* Dynamic Fields */}
+          {fields.map((field, index) => (
+            <div key={index} className="flex flex-row space-y-2 gap-2 ">
+              <input
+                className="border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                type="text"
+                name="label"
+                placeholder="Label"
+                value={field.label}
+                onChange={(event) => handleFieldChange(index, event)}
+                required
+              />
+              <span>:</span>
+              <input
+                className="border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                type="text"
+                name="value"
+                placeholder="Value"
+                value={field.value}
+                onChange={(event) => handleFieldChange(index, event)}
+                required
+              />
             </div>
-            <div className="partner-modal-fix">
-              <div className="row">
-                <div className="col-lg-6">
-                  <div>
-                    <CustomRewardInput
-                      iconName={"IoMdPerson"}
-                      placeholder={"Partner name"}
-                      type={"text"}
-                      name="name"
-                      value={formData.name}
-                      setValue={handleInputChange}
-                      style={{ width: "330px" }}
-                      event={true}
+          ))}
+
+          {/* Add Field Button */}
+          <button
+            type="button"
+            className="bg-blue-500 text-white px-4 py-2 rounded-md self-start"
+            onClick={handleAddField}
+          >
+            + Add Field
+          </button>
+
+          {/* Intro Section Toggle */}
+          <div className="flex items-center">
+            <input
+              type="checkbox"
+              id="introStatus"
+              checked={isIntro}
+              onChange={toggleIntroStatus}
+              className="mr-2"
+            />
+            <label htmlFor="introStatus" className="text-gray-700">
+              Add Intro Section
+            </label>
+          </div>
+
+          {/* Intro Section */}
+          {isIntro && (
+            <div className="border border-gray-300 p-4 rounded-md">
+              {/* Intro Description */}
+              <textarea
+                className="border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500 w-full"
+                name="intro_description"
+                placeholder="Intro Description"
+                value={formData.intro_description}
+                onChange={handleInputChange}
+                required
+              />
+
+              {/* Intro Media Type Selection */}
+              <div className="mt-4">
+                <label className="block text-gray-700 mb-2">
+                  Intro Media Type:
+                </label>
+                <div className="flex items-center space-x-4">
+                  <label className="flex items-center">
+                    <input
+                      type="radio"
+                      name="introMediaType"
+                      value="0"
+                      checked={isState === 0}
+                      onChange={handleChangeState}
+                      className="mr-2"
                     />
-                  </div>
-                </div>
-                <div className="col-lg-6">
-                  <div>
-                    <CustomRewardInput
-                      iconName={"MdCategory"}
-                      placeholder={"Category"}
-                      type={"text"}
-                      name="category"
-                      value={formData.category}
-                      setValue={handleInputChange}
-                      style={{ width: "330px" }}
-                      event={true}
+                    Image
+                  </label>
+                  <label className="flex items-center">
+                    <input
+                      type="radio"
+                      name="introMediaType"
+                      value="1"
+                      checked={isState === 1}
+                      onChange={handleChangeState}
+                      className="mr-2"
                     />
-                  </div>
+                    Video
+                  </label>
                 </div>
-                <div className="row">
-                  <div className="col-lg-12">
-                    <CustomRewardInput
-                      iconName={"IoMdLink"}
-                      placeholder={"Partner Url"}
-                      type={"text"}
-                      name="link"
-                      value={formData.link}
-                      setValue={handleInputChange}
-                      style={{ width: "716px" }}
-                      event={true}
-                    />
-                  </div>
-                </div>
-                <div className="partner-flex">
-                  <div className="col-lg-4">
-                    <div className="partner-modal-file">
-                      {updateData
-                        ? "Update Partner Branding image"
-                        : "Add Partner Branding image"}
-                    </div>
-                    <div className="partner-modal-btn-border">
-                      <div
-                        style={{
-                          display: "flex",
-                          justifyContent: "space-between",
-                        }}
-                      >
-                        <label className="partner-modal-icon-clr">
-                          <CustomIcon name={"RiAttachment2"} />
-                          <input
-                            type="file"
-                            accept="image/*"
-                            style={{ display: "none" }}
-                            onChange={handleFileChange}
-                          />
-                          <div className="partner-modal-icon-text">
-                            {selectedFile ? selectedFile.name : "Attach Image"}
-                          </div>
-                          {selectedFile && (
-                            <CustomIcon
-                              name={"TiDeleteOutline"}
-                              className="delete-icon"
-                              onClick={handleRemoveFile}
-                            />
-                          )}
-                        </label>
-                      </div>
-                    </div>
-                  </div>
-                  <div className="partner-intro">
-                    <div className="partner-modal-file">Partner Intro Page</div>
-                    <CustomToggleSwitch
-                      isIntro={isIntro}
-                      setIsIntroFunc={setIsIntroFunc}
-                    />
-                  </div>
-                </div>
-                {isIntro && (
-                  <>
-                    <div>
-                      <textarea
-                        className="textarea"
-                        name="intro_description"
-                        id="partnerintrodes"
-                        placeholder="Description"
-                        value={formData.intro_description}
-                        onChange={handleInputChange}
-                      ></textarea>
-                    </div>
-                    <div className="partner-flex gap">
-                      <div>
-                        {isState === 0 ? (
-                          <div className="partner-modal-btn-border">
-                            <div
-                              style={{
-                                display: "flex",
-                                justifyContent: "space-between",
-                              }}
-                            >
-                              <label className="partner-modal-icon-clr">
-                                <CustomIcon name={"RiAttachment2"} />
-                                <input
-                                  type="file"
-                                  accept="image/*"
-                                  style={{ display: "none" }}
-                                  onChange={handleIntroFileChange}
-                                />
-                                <div className="partner-modal-icon-text">
-                                  {introFile ? introFile.name : "Attach Image"}
-                                </div>
-                                {introFile && (
-                                  <CustomIcon
-                                    name={"TiDeleteOutline"}
-                                    className="delete-icon"
-                                    onClick={handleRemoveIntroFile}
-                                  />
-                                )}
-                              </label>
-                            </div>
-                          </div>
-                        ) : (
-                          <CustomRewardInput
-                            iconName={"IoMdLink"}
-                            placeholder={"Video Url"}
-                            type={"text"}
-                            name="intro_video"
-                            value={formData.intro_video}
-                            setValue={handleInputChange}
-                            style={{ width: "600px" }}
-                            event={true}
-                          />
-                        )}
-                      </div>
-                      <div className="partner-switch">
-                        <CustomSwitch
-                          icons={[
-                            <CustomIcon name={"LuImagePlus"} />,
-                            <CustomIcon name={"LuPlaySquare"} />,
-                          ]}
-                          labels={["Image", "Video"]}
-                          isState={isState}
-                          setIsStateFunc={handleChangeState}
-                        />
-                      </div>
-                    </div>
-                  </>
-                )}
               </div>
 
-              <div>
-                <div className="partner-bttn-fix">
-                  <div>
-                    {updateData ? (
-                      <button className="partner-btn" onClick={updatePartner}>
-                        Update Partner
+              {/* Intro Image or Video Input */}
+              {isState === 0 ? (
+                <div className="mt-4">
+                  <label className="block text-gray-700">Intro Image:</label>
+                  <input
+                    type="file"
+                    name="intro_images"
+                    accept="image/*"
+                    onChange={handleIntroImageChange}
+                    className="mt-1"
+                  />
+                  {introImage && (
+                    <div className="flex items-center mt-2">
+                      <span>{introImage.name}</span>
+                      <button
+                        onClick={handleRemoveIntroImage}
+                        className="ml-2 text-red-500 underline"
+                      >
+                        Remove
                       </button>
-                    ) : (
-                      <button className="partner-btn" onClick={addPartner}>
-                        Add Partner
-                      </button>
-                    )}
-                  </div>
+                    </div>
+                  )}
                 </div>
-              </div>
+              ) : (
+                <div className="mt-4">
+                  <label className="block text-gray-700">Intro Video URL:</label>
+                  <input
+                    type="url"
+                    name="intro_video"
+                    placeholder="https://example.com/video"
+                    value={formData.intro_video}
+                    onChange={handleInputChange}
+                    className="border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500 w-full"
+                    required={isState === 1}
+                  />
+                </div>
+              )}
             </div>
-          </div>
+          )}
+
+          {/* Submit Button */}
+          <button
+            type="submit"
+            className="bg-green-500 text-white px-4 py-2 rounded-md self-start"
+          >
+            {updateData ? "Update Partner" : "Add Partner"}
+          </button>
         </div>
-      </div>
+      </form>
     </Modal>
   );
 };
