@@ -11,8 +11,11 @@ import CustomAlert from "../../components/CustomAlert/CustomAlert.jsx";
 import Pagination from "../../components/Pagination/Pagination.jsx";
 import { useSelector } from "react-redux";
 import FieldsPopup from "./FieldsPopup"; // Import the new FieldsPopup component
+import { useNavigate } from "react-router-dom";
 
 const Partners = () => {
+  const navigate = useNavigate(); // Initialize navigate
+
   const [partnerData, setPartnerData] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
   const [showAlert, setShowAlert] = useState(false);
@@ -28,7 +31,6 @@ const Partners = () => {
   
   const [showFieldsPopup, setShowFieldsPopup] = useState(false);
   const [selectedPartner, setSelectedPartner] = useState(null);
-
   const handlePartner = async () => {
     setIsLoading(true);
     try {
@@ -41,10 +43,35 @@ const Partners = () => {
         },
         data: { Eid: userId }
       });
-
+  
       if (result && result.data && Array.isArray(result.data.partnerList)) {
-        setPartnerData(result.data.partnerList);
-        setTotalPages(Math.ceil(result.data.partnerList.length / rowsPerPage));
+        // Process each partner to ensure `fields` is an array
+        const processedPartners = result.data.partnerList.map(partner => {
+          let processedFields = [];
+  
+          if (Array.isArray(partner.fields)) {
+            processedFields = partner.fields;
+          } else if (typeof partner.fields === 'string') {
+            try {
+              const parsedFields = JSON.parse(partner.fields);
+              if (Array.isArray(parsedFields)) {
+                processedFields = parsedFields;
+              }
+            } catch (error) {
+              console.error("Failed to parse `fields` for partner:", partner._id, error);
+            }
+          } else if (typeof partner.fields === 'object' && partner.fields !== null) {
+            processedFields = Object.entries(partner.fields).map(([label, value]) => ({ label, value }));
+          }
+  
+          return {
+            ...partner,
+            fields: processedFields
+          };
+        });
+  
+        setPartnerData(processedPartners);
+        setTotalPages(Math.ceil(processedPartners.length / rowsPerPage));
       } else {
         console.error("Invalid response format:", result);
         toast.error("Failed to fetch partners: Invalid response format");
@@ -56,7 +83,7 @@ const Partners = () => {
       setIsLoading(false);
     }
   };
-
+  
   const updatePartnerStatus = async (id, status) => {
     setIsLoading(true);
     try {
@@ -114,10 +141,11 @@ const Partners = () => {
     setShowAlert(true);
   };
 
-  const OpenFieldsAsPopUp = (partner) => {
-    setSelectedPartner(partner);
-    setShowFieldsPopup(true);
+  const openDisplayForm = (partner) => {
+    console.log("Navigating to DisplayForm with partner:", partner);
+    navigate('/display-form', { state: { partner } });
   };
+  
 
   useEffect(() => {
     handlePartner();
@@ -189,7 +217,7 @@ const Partners = () => {
               <div
                 className="cardbox"
                 style={{ backgroundImage: `url("${item.image}")` }}
-                onClick={() => OpenFieldsAsPopUp(item)}
+                onClick={() => openDisplayForm(item)}
               />
               <div className="cardtext">{item.name}</div>
             </div>
@@ -222,12 +250,6 @@ const Partners = () => {
           title="Delete"
         />
       )}
-      <FieldsPopup
-        isOpen={showFieldsPopup}
-        toggle={() => setShowFieldsPopup(false)}
-        fields={selectedPartner?.fields || {}}
-        partnerName={selectedPartner?.name || ""}
-      />
       <Pagination
         currentPage={currentPage}
         totalPages={totalPages}

@@ -99,5 +99,7 @@ export const endpoint = {
   UPDATE_CATEGORY_STATUS: "api/category/updateCategoryStatus",
   SEVEN_JOBS:"api/job-portal/get7JobMetrics",
   ENTERPRISE_PARTNERS:"api/enterprise/getEnterprisePartners",
+  SUBMITFORM:"api/enterprise/submitPartnerForm",
+  FORM_DATA:"api/enterprise/getFormData"
   };
   

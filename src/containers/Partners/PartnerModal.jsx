@@ -221,23 +221,35 @@ data.append("Eid", userId);
   };
 
   return (
-    <Modal isOpen={isOpen} toggle={onClose}>
+    <Modal isOpen={isOpen} toggle={onClose} className="max-w-3xl">
       <form
         className="bg-white p-6 rounded-lg shadow-lg w-full"
         onSubmit={updateData ? updatePartner : addPartner}
       >
         <div className="flex flex-col space-y-4">
           {/* Name Input */}
+          <h1 className="flex justify-center items-center text-blue-500 text-2xl">CREATE PARTNER</h1>
+          <div className="flex flex-row gap-3" >
           <input
-            className="border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
-            type="text"
-            name="name"
-            placeholder="Name"
-            value={formData.name}
-            onChange={handleInputChange}
-            required
-          />
+  className="border border-gray-300 rounded-md px-3    focus:outline-none focus:ring-2 focus:ring-blue-500 w-full"
+  type="text"
+  name="name"
+  placeholder="Name"
+  value={formData.name}
+  onChange={handleInputChange}
+  required
+/>
+<input
+  className="border border-gray-300 rounded-md px-3 py-3 focus:outline-none focus:ring-2 focus:ring-blue-500 w-full"
+  type="text"
+  name="category"
+  placeholder="Category"
+  value={formData.category}
+  onChange={handleInputChange}
+  required
+/>
 
+          </div>
           {/* Link Input (URL) */}
           {/* <input
             className="border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
@@ -273,30 +285,23 @@ data.append("Eid", userId);
           </div>
 
           {/* Category Input */}
-          <input
-            className="border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
-            type="text"
-            name="category"
-            placeholder="Category"
-            value={formData.category}
-            onChange={handleInputChange}
-            required
-          />
+
 
           {/* Dynamic Fields */}
           {fields.map((field, index) => (
             <div key={index} className="flex flex-row space-y-2 gap-2 ">
-              <input
-                className="border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
-                type="text"
-                name="label"
-                placeholder="Label"
-                value={field.label}
-                onChange={(event) => handleFieldChange(index, event)}
-                required
-              />
-              <span>:</span>
-              <input
+             <input
+  className="border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500 w-full"
+  type="text"
+  name="label"
+  placeholder="Label"
+  value={field.label}
+  onChange={(event) => handleFieldChange(index, event)}
+  required
+/>
+
+              {/* <span>:</span> */}
+              {/* <input
                 className="border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
                 type="text"
                 name="value"
@@ -304,7 +309,7 @@ data.append("Eid", userId);
                 value={field.value}
                 onChange={(event) => handleFieldChange(index, event)}
                 required
-              />
+              /> */}
             </div>
           ))}
 

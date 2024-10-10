@@ -1,3 +1,4 @@
+import React, { useState } from 'react';
 import { BrowserRouter, Route, Routes } from "react-router-dom";
 import { Toaster } from "react-hot-toast";
 import Login from "./containers/Login";
@@ -17,9 +18,27 @@ import UserTable from "./containers/section-permission/UserTable";
 import Index from "./containers/HomePage/Index";
 import ECategory from "./containers/category/ECategory";
 import BankDetails from "./containers/BankDetails";
-import Partners from "./containers/Partners/Partners.jsx";
-
+import Partners from "./containers/Partners/Partners";
+import DisplayForm from "./containers/Partners/DisplayForm";
+import FData from './containers/Partners/FData';
 function App() {
+  const [partners, setPartners] = useState([]);
+
+  const handlePartner = (updatedPartner) => {
+    setPartners(prevPartners => {
+      const index = prevPartners.findIndex(p => p.id === updatedPartner.id);
+      if (index !== -1) {
+        // Update existing partner
+        const newPartners = [...prevPartners];
+        newPartners[index] = updatedPartner;
+        return newPartners;
+      } else {
+        // Add new partner
+        return [...prevPartners, updatedPartner];
+      }
+    });
+  };
+
   return (
     <>
       <BrowserRouter>
@@ -31,23 +50,23 @@ function App() {
             <Route exact path="/login" element={<Login />} />
             <Route exact path="/register" element={<Register />} />
             <Route exact path="/secreg" element={<Secreg />} />
-            <Route exact path="/" element={<Index />}>
-
-            <Route exact path="/dashboard" element={<Dashboard />} />
-            <Route exact path="/category" element={<Category />} />
-            <Route exact path="/jobs" element={<Jobs />} />
-            <Route exact path="/coursepermissions" element={<CoursePermissions />} />
-            <Route exact path="/permissions" element={<Permission />} />
-            <Route exact path="/EmployeePermission" element={<Section />} />
-            <Route exact path="/sectionpermission" element={<Section />} />
-            <Route exact path="/spermissions" element={<SectionPermission />} />
-            <Route exact path="/skillyatravideos" element={<SkillYatraVideos />} />
-            <Route exact path="/usertable" element={<UserTable />} />
-            <Route exact path="partners" element={<Partners />} />
-
+            <Route path="/" element={<Index />}>
+              <Route exact path="/dashboard" element={<Dashboard />} />
+              <Route exact path="/category" element={<Category />} />
+              <Route exact path="/jobs" element={<Jobs />} />
+              <Route exact path="/coursepermissions" element={<CoursePermissions />} />
+              <Route exact path="/permissions" element={<Permission />} />
+              <Route exact path="/EmployeePermission" element={<Section />} />
+              <Route exact path="/sectionpermission" element={<Section />} />
+              <Route exact path="/spermissions" element={<SectionPermission />} />
+              <Route exact path="/skillyatravideos" element={<SkillYatraVideos />} />
+              <Route exact path="/usertable" element={<UserTable />} />
+              <Route path="/partners" element={<Partners />} />
+              <Route path='/fdata' element={<FData/>}></Route>
             </Route>
-            <Route exact path="/bank-details" element={<BankDetails />} />
+            <Route path="/display-form" element={<DisplayForm />} />  
 
+            <Route exact path="/bank-details" element={<BankDetails />} />
           </Routes>
         </div>
       </BrowserRouter>
